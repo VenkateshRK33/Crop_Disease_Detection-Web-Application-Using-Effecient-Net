@@ -1,0 +1,25 @@
+# Core ML Dependencies - PyTorch (Python 3.14 compatible)
+torch==2.9.0
+torchvision==0.24.0
+timm==1.0.22
+
+# Data Processing
+numpy==2.3.4
+opencv-python==4.12.0.88
+pillow==12.0.0
+
+# ML Utilities
+scikit-learn==1.7.2
+joblib==1.5.2
+
+# API Service
+fastapi==0.121.1
+uvicorn==0.38.0
+python-multipart==0.0.20
+
+# Visualization
+matplotlib==3.10.7
+seaborn==0.13.2
+tqdm==4.67.1
+
+# Note: For GPU support, install torch with CUDA from https://pytorch.org/
