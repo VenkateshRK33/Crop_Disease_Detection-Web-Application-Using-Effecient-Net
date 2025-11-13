@@ -1,0 +1,81 @@
+/* Skeleton Loader Styles */
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton-line {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 0%,
+    #e0e0e0 20%,
+    #f0f0f0 40%,
+    #f0f0f0 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+  border-radius: 8px;
+}
+
+.skeleton-container {
+  padding: 10px 0;
+}
+
+/* Disease Card Skeleton */
+.skeleton-disease-card {
+  display: flex;
+  gap: 30px;
+  padding: 30px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+}
+
+.skeleton-image {
+  width: 300px;
+  height: 300px;
+  border-radius: 15px;
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 0%,
+    #e0e0e0 20%,
+    #f0f0f0 40%,
+    #f0f0f0 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+  flex-shrink: 0;
+}
+
+.skeleton-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Message Skeleton */
+.skeleton-message {
+  padding: 15px 20px;
+  background: #f8f9fa;
+  border-radius: 15px;
+  margin-bottom: 15px;
+  max-width: 80%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .skeleton-disease-card {
+    flex-direction: column;
+  }
+
+  .skeleton-image {
+    width: 100%;
+    height: 250px;
+  }
+}

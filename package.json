@@ -1,0 +1,48 @@
+{
+  "name": "farmer-chatbot",
+  "version": "2.0.0",
+  "description": "AI-powered chatbot for plant disease diagnosis and treatment advice with MongoDB",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "start:backend": "node backend/server.js",
+    "start:ml": "python api_service.py",
+    "start:frontend": "cd frontend-react && npm start",
+    "dev": "concurrently \"npm run start:ml\" \"npm run start:backend\" \"npm run start:frontend\" --names \"ML,Backend,Frontend\" --prefix-colors \"blue,green,yellow\"",
+    "dev:backend": "nodemon backend/server.js",
+    "start:old": "node chatbot-server.js",
+    "test:backend": "jest backend/server.test.js --forceExit"
+  },
+  "keywords": [
+    "agriculture",
+    "plant-disease",
+    "chatbot",
+    "llm",
+    "ollama",
+    "mongodb",
+    "mern"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "form-data": "^4.0.4",
+    "mongoose": "^8.19.3",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "concurrently": "^9.2.1",
+    "jest": "^30.2.0",
+    "nodemon": "^3.0.1",
+    "supertest": "^7.1.4"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": ["/node_modules/"],
+    "testTimeout": 30000
+  }
+}

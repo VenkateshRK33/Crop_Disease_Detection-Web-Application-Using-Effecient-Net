@@ -1,0 +1,407 @@
+.results-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Disease Card */
+.disease-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 30px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: slideInUp 0.5s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.disease-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.disease-image-container {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+.result-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.disease-info {
+  padding: 24px;
+}
+
+.disease-name {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 20px 0;
+}
+
+/* Confidence Display */
+.confidence-display {
+  margin-bottom: 20px;
+}
+
+.confidence-bar-container {
+  width: 100%;
+  height: 12px;
+  background: #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.confidence-bar {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 1s ease-out;
+  animation: fillBar 1s ease-out;
+}
+
+@keyframes fillBar {
+  from {
+    width: 0;
+  }
+}
+
+.confidence-bar.high {
+  background: linear-gradient(90deg, #4caf50, #66bb6a);
+}
+
+.confidence-bar.low {
+  background: linear-gradient(90deg, #ff9800, #ffb74d);
+}
+
+.confidence-text {
+  font-size: 16px;
+  color: #555;
+  margin: 0;
+}
+
+.confidence-text strong {
+  color: #2c3e50;
+  font-size: 18px;
+}
+
+/* Low Confidence Warning */
+.low-confidence-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: #fff3e0;
+  border: 2px solid #ff9800;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.warning-icon {
+  width: 24px;
+  height: 24px;
+  color: #ff9800;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.warning-content {
+  flex: 1;
+}
+
+.warning-content strong {
+  display: block;
+  color: #e65100;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.warning-content p {
+  margin: 0;
+  color: #f57c00;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Alternative Predictions */
+.alternative-predictions {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.alternative-predictions h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 12px 0;
+}
+
+.predictions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.prediction-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  transition: background 0.2s;
+}
+
+.prediction-item:hover {
+  background: #e9ecef;
+}
+
+.prediction-name {
+  font-size: 15px;
+  color: #495057;
+}
+
+.prediction-confidence {
+  font-weight: 600;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+/* Chatbot Interface */
+.chatbot {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-height: 600px;
+  display: flex;
+  flex-direction: column;
+  animation: slideInUp 0.5s ease-out 0.2s both;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  padding: 10px;
+  max-height: 400px;
+}
+
+.message {
+  margin-bottom: 16px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message.user {
+  text-align: right;
+}
+
+.message.assistant {
+  text-align: left;
+}
+
+.message-content {
+  display: inline-block;
+  padding: 12px 16px;
+  border-radius: 12px;
+  max-width: 80%;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.message.user .message-content {
+  background: #4caf50;
+  color: white;
+}
+
+.message.assistant .message-content {
+  background: #f1f3f4;
+  color: #2c3e50;
+}
+
+.cursor {
+  animation: blink 1s infinite;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Suggested Questions */
+.suggested-questions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.suggested-btn {
+  padding: 10px 16px;
+  background: #e3f2fd;
+  border: 1px solid #2196f3;
+  border-radius: 20px;
+  color: #1976d2;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.suggested-btn:hover {
+  background: #2196f3;
+  color: white;
+  transform: translateY(-1px);
+}
+
+/* Input Area */
+.input-area {
+  display: flex;
+  gap: 10px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.input-area input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 24px;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-area input:focus {
+  border-color: #4caf50;
+}
+
+.input-area input:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.input-area button {
+  padding: 12px 24px;
+  background: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 24px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.input-area button:hover:not(:disabled) {
+  background: #45a049;
+}
+
+.input-area button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .results-section {
+    padding: 10px;
+  }
+
+  .disease-card {
+    margin-bottom: 20px;
+  }
+
+  .disease-image-container {
+    height: 200px;
+  }
+
+  .disease-info {
+    padding: 16px;
+  }
+
+  .disease-name {
+    font-size: 22px;
+  }
+
+  .low-confidence-warning {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .warning-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .message-content {
+    max-width: 90%;
+  }
+
+  .suggested-questions {
+    flex-direction: column;
+  }
+
+  .suggested-btn {
+    width: 100%;
+  }
+
+  .input-area {
+    flex-direction: column;
+  }
+
+  .input-area button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .disease-name {
+    font-size: 20px;
+  }
+
+  .confidence-text {
+    font-size: 14px;
+  }
+
+  .confidence-text strong {
+    font-size: 16px;
+  }
+
+  .warning-content strong {
+    font-size: 14px;
+  }
+
+  .warning-content p {
+    font-size: 13px;
+  }
+}

@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌱 Plant Disease AI Assistant - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .upload-section {
+            padding: 40px;
+            text-align: center;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .upload-box {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            background: #f8f9ff;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-box:hover {
+            background: #f0f2ff;
+            border-color: #764ba2;
+        }
+
+        .upload-box.dragover {
+            background: #e8ebff;
+            border-color: #764ba2;
+            transform: scale(1.02);
+        }
+
+        #imageInput {
+            display: none;
+        }
+
+        .upload-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .upload-text {
+            font-size: 18px;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #imagePreview {
+            margin-top: 20px;
+        }
+
+        #imagePreview img {
+            max-width: 300px;
+            max-height: 300px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .pipeline-section {
+            padding: 30px 40px;
+            background: #f8f9ff;
+            display: none;
+        }
+
+        .pipeline-section.active {
+            display: block;
+        }
+
+        .pipeline-step {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+
+        .pipeline-step.pending {
+            opacity: 0.4;
+        }
+
+        .pipeline-step.active {
+            opacity: 1;
+            animation: pulse 2s infinite;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .pipeline-step.complete {
+            opacity: 1;
+            background: #e8f5e9;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .step-icon {
+            font-size: 40px;
+            margin-right: 20px;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .step-message {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .step-status {
+            font-size: 24px;
+        }
+
+        .results-section {
+            padding: 40px;
+            display: none;
+        }
+
+        .results-section.active {
+            display: block;
+        }
+
+        .disease-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .disease-card img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 4px solid white;
+        }
+
+        .disease-info h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .confidence {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        .top-predictions {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .chatbot {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .messages {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+        }
+
+        .message.bot {
+            justify-content: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 15px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .message.bot .message-content {
+            background: white;
+            color: #333;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .streaming-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background: #667eea;
+            animation: blink 1s infinite;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .suggested-questions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .suggested-btn {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .suggested-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-area input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input-area input:focus {
+            border-color: #667eea;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 0;
+            }
+
+            header h1 {
+                font-size: 24px;
+            }
+
+            .upload-section {
+                padding: 20px;
+            }
+
+            .disease-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .message-content {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌱 Plant Disease AI Assistant</h1>
+            <p>Upload a plant image to get instant AI-powered diagnosis and treatment advice</p>
+        </header>
+
+        <!-- Upload Section -->
+        <div class="upload-section" id="uploadSection">
+            <div class="upload-box" id="uploadBox">
+                <div class="upload-icon">📸</div>
+                <div class="upload-text">Click to upload or drag & drop a plant image</div>
+                <input type="file" id="imageInput" accept="image/*">
+            </div>
+            <div id="imagePreview"></div>
+            <button class="btn" id="analyzeBtn" style="display:none; margin-top: 20px;">Analyze Plant</button>
+        </div>
+
+        <!-- Visual Pipeline -->
+        <div class="pipeline-section" id="pipelineSection">
+            <div class="pipeline-step pending" id="step1">
+                <div class="step-icon">📸</div>
+                <div class="step-content">
+                    <div class="step-label">Analyzing Image</div>
+                    <div class="step-message">Sending image to AI model...</div>
+                </div>
+                <div class="step-status"></div>
+            </div>
+            <div class="pipeline-step pending" id="step2">
+                <div class="step-icon">🔍</div>
+                <div class="step-content">
+                    <div class="step-label">Disease Detection</div>
+                    <div class="step-message">Identifying plant disease...</div>
+                </div>
+                <div class="step-status"></div>
+            </div>
+            <div class="pipeline-step pending" id="step3">
+                <div class="step-icon">🤖</div>
+                <div class="step-content">
+                    <div class="step-label">AI Expert Consulting</div>
+                    <div class="step-message">Generating treatment advice...</div>
+                </div>
+                <div class="step-status"></div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section" id="resultsSection">
+            <!-- Disease Card -->
+            <div class="disease-card">
+                <img id="resultImage" src="" alt="Plant">
+                <div class="disease-info">
+                    <h2 id="diseaseName"></h2>
+                    <p class="confidence">Confidence: <span id="confidence"></span></p>
+                    <div class="top-predictions" id="topPredictions"></div>
+                </div>
+            </div>
+
+            <!-- Chatbot Interface -->
+            <div class="chatbot">
+                <div class="messages" id="messages"></div>
+                
+                <div class="suggested-questions" id="suggestedQuestions"></div>
+
+                <div class="input-area">
+                    <input type="text" id="userInput" placeholder="Ask a follow-up question..." />
+                    <button class="btn" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFile = null;
+        let conversationId = null;
+        let currentImageUrl = null;
+
+        // Upload box interactions
+        const uploadBox = document.getElementById('uploadBox');
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+
+        uploadBox.addEventListener('click', () => imageInput.click());
+
+        uploadBox.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadBox.classList.add('dragover');
+        });
+
+        uploadBox.addEventListener('dragleave', () => {
+            uploadBox.classList.remove('dragover');
+        });
+
+        uploadBox.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadBox.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                handleImageSelect(file);
+            }
+        });
+
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                handleImageSelect(file);
+            }
+        });
+
+        function handleImageSelect(file) {
+            selectedFile = file;
+            
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                currentImageUrl = e.target.result;
+                imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                analyzeBtn.style.display = 'inline-block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        analyzeBtn.addEventListener('click', analyzeImage);
+
+        async function analyzeImage() {
+            if (!selectedFile) return;
+
+            // Show pipeline
+            document.getElementById('pipelineSection').classList.add('active');
+            updatePipelineStep(1, 'active', 'Processing image...');
+
+            try {
+                // Send to new backend API (handles ML + DB + Chatbot)
+                const formData = new FormData();
+                formData.append('image', selectedFile);
+
+                const response = await fetch('http://localhost:4000/api/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Backend API failed');
+                }
+
+                const data = await response.json();
+                
+                // Step 1 complete
+                updatePipelineStep(1, 'complete', '✓ Image analyzed');
+                
+                // Step 2: Disease detected
+                updatePipelineStep(2, 'active', `Detected: ${data.prediction.disease}`);
+                await sleep(1000);
+                updatePipelineStep(2, 'complete', `✓ ${data.prediction.disease} (${(data.prediction.confidence * 100).toFixed(1)}%)`);
+
+                // Step 3: Get chatbot advice
+                updatePipelineStep(3, 'active', 'Consulting AI expert...');
+
+                conversationId = data.conversationId;
+
+                // Show results
+                displayResults(data.prediction, data);
+
+                // Stream initial advice
+                await streamAdvice();
+
+                updatePipelineStep(3, 'complete', '✓ Advice ready');
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error analyzing image. Make sure ML API and Chatbot server are running.');
+            }
+        }
+
+        function updatePipelineStep(stepNum, status, message) {
+            const step = document.getElementById(`step${stepNum}`);
+            step.className = `pipeline-step ${status}`;
+            if (message) {
+                step.querySelector('.step-message').textContent = message;
+            }
+            if (status === 'complete') {
+                step.querySelector('.step-status').textContent = '✓';
+            }
+        }
+
+        function displayResults(prediction, data) {
+            // Show results section
+            document.getElementById('resultsSection').classList.add('active');
+
+            // Disease card
+            document.getElementById('resultImage').src = currentImageUrl;
+            document.getElementById('diseaseName').textContent = prediction.disease.replace(/_/g, ' ');
+            document.getElementById('confidence').textContent = `${(prediction.confidence * 100).toFixed(1)}%`;
+            
+            const topPreds = prediction.topPredictions.slice(1, 4)
+                .map(p => `${p.class.replace(/_/g, ' ')}: ${(p.confidence * 100).toFixed(1)}%`)
+                .join(' • ');
+            document.getElementById('topPredictions').textContent = `Other possibilities: ${topPreds}`;
+
+            // Suggested questions
+            const suggestedDiv = document.getElementById('suggestedQuestions');
+            suggestedDiv.innerHTML = '';
+            data.suggestedQuestions.forEach(q => {
+                const btn = document.createElement('button');
+                btn.className = 'suggested-btn';
+                btn.textContent = q;
+                btn.onclick = () => askQuestion(q);
+                suggestedDiv.appendChild(btn);
+            });
+        }
+
+        async function streamAdvice(question = null) {
+            const messagesDiv = document.getElementById('messages');
+            
+            // Create bot message
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            messageDiv.appendChild(contentDiv);
+            messagesDiv.appendChild(messageDiv);
+
+            // Stream from server
+            const url = question 
+                ? `http://localhost:4000/api/chat/stream/${conversationId}?question=${encodeURIComponent(question)}`
+                : `http://localhost:4000/api/chat/stream/${conversationId}`;
+
+            const eventSource = new EventSource(url);
+            let fullText = '';
+
+            eventSource.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                
+                if (data.chunk) {
+                    fullText += data.chunk;
+                    contentDiv.innerHTML = formatMessage(fullText) + '<span class="streaming-cursor"></span>';
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                }
+                
+                if (data.done) {
+                    contentDiv.innerHTML = formatMessage(fullText);
+                    eventSource.close();
+                }
+            };
+
+            eventSource.onerror = () => {
+                eventSource.close();
+                contentDiv.innerHTML = formatMessage(fullText || 'Error getting response. Please try again.');
+            };
+        }
+
+        function formatMessage(text) {
+            // Simple markdown-like formatting
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
+        }
+
+        async function askQuestion(question) {
+            const messagesDiv = document.getElementById('messages');
+            
+            // Add user message
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user';
+            userMsg.innerHTML = `<div class="message-content">${question}</div>`;
+            messagesDiv.appendChild(userMsg);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+            // Stream bot response
+            await streamAdvice(question);
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const question = input.value.trim();
+            
+            if (!question) return;
+            
+            input.value = '';
+            await askQuestion(question);
+        }
+
+        // Enter key to send
+        document.getElementById('userInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>
