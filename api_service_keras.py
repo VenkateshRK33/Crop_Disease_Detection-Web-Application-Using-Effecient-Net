@@ -1,22 +1,19 @@
 """
-FastAPI Microservice for Plant Disease Detection using PyTorch
+FastAPI Microservice for Plant Disease Detection using Keras/TensorFlow
 Integrates with MERN Stack
 """
 
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-import torch
-import torch.nn.functional as F
-import timm
+import tensorflow as tf
 import numpy as np
 import cv2
-import joblib
 import json
 from pathlib import Path
 from typing import List, Dict
 import uvicorn
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from datetime import datetime
 import io
 
@@ -36,74 +33,50 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Global variables for model and encoder
+# Global variables for model
 model = None
-label_encoder = None
 class_names = None
-device = None
 
 # Configuration
 CONFIG = {
-    'model_path': 'efficientnet_plant_disease.pth',
-    'label_encoder_path': 'label_encoder.pkl',
+    'model_path': 'plant_disease_model.h5',
     'class_names_path': 'class_names.json',
     'image_size': (224, 224),
     'confidence_threshold': 0.5
 }
 
 # Response models
-class PredictionItem(BaseModel):
-    class_name: str = Field(alias='class')
-    confidence: float
-
 class PredictionResponse(BaseModel):
     success: bool
     prediction: str
     confidence: float
-    all_predictions: List[PredictionItem]
+    all_predictions: List[Dict[str, float]]
     timestamp: str
     message: str = None
-    
-    class Config:
-        populate_by_name = True
 
 class HealthResponse(BaseModel):
     status: str
     model_loaded: bool
     num_classes: int
-    device: str
     timestamp: str
 
-# Load model and encoder on startup
+# Load model on startup
 @app.on_event("startup")
 async def load_model_on_startup():
-    """Load ML model and label encoder when API starts"""
-    global model, label_encoder, class_names, device
+    """Load ML model when API starts"""
+    global model, class_names
     
     try:
-        print("Loading model and encoders...")
+        print("Loading model and class names...")
         
-        # Set device
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        print(f"Using device: {device}")
-        
-        # Load class names first to get num_classes
+        # Load class names
         with open(CONFIG['class_names_path'], 'r') as f:
             class_names = json.load(f)
-        num_classes = len(class_names)
-        
-        # Create model with pretrained ImageNet weights
-        # Note: Using pretrained weights due to version compatibility
-        # Your custom trained weights have a version mismatch with current timm
-        model = timm.create_model('efficientnet_b3', pretrained=True, num_classes=num_classes)
-        model = model.to(device)
-        model.eval()
-        print(f"✓ Model loaded from {CONFIG['model_path']}")
-        
-        # Load label encoder
-        label_encoder = joblib.load(CONFIG['label_encoder_path'])
-        print(f"✓ Label encoder loaded from {CONFIG['label_encoder_path']}")
         print(f"✓ Class names loaded: {len(class_names)} classes")
+        
+        # Load Keras model
+        model = tf.keras.models.load_model(CONFIG['model_path'])
+        print(f"✓ Model loaded from {CONFIG['model_path']}")
         
         print("=" * 60)
         print("API Ready! Model loaded successfully")
@@ -113,7 +86,7 @@ async def load_model_on_startup():
         print(f"Error loading model: {e}")
         print("API will start but predictions will fail until model is loaded")
 
-def preprocess_image(image_bytes: bytes) -> torch.Tensor:
+def preprocess_image(image_bytes: bytes) -> np.ndarray:
     """Preprocess uploaded image for model prediction"""
     try:
         # Convert bytes to numpy array
@@ -131,36 +104,31 @@ def preprocess_image(image_bytes: bytes) -> torch.Tensor:
         # Resize to model input size
         img = cv2.resize(img, CONFIG['image_size'])
         
-        # Convert to tensor and normalize
-        img_tensor = torch.from_numpy(img).permute(2, 0, 1).float() / 255.0
-        
-        # Normalize with ImageNet stats
-        mean = torch.tensor([0.485, 0.456, 0.406]).view(3, 1, 1)
-        std = torch.tensor([0.229, 0.224, 0.225]).view(3, 1, 1)
-        img_tensor = (img_tensor - mean) / std
+        # Normalize to [0, 1]
+        img = img.astype(np.float32) / 255.0
         
         # Add batch dimension
-        img_tensor = img_tensor.unsqueeze(0)
+        img = np.expand_dims(img, axis=0)
         
-        return img_tensor
+        return img
         
     except Exception as e:
         raise ValueError(f"Image preprocessing failed: {str(e)}")
 
-def get_top_predictions(predictions: torch.Tensor, top_k: int = 5) -> List[Dict[str, float]]:
+def get_top_predictions(predictions: np.ndarray, top_k: int = 5) -> List[Dict[str, float]]:
     """Get top K predictions with class names and confidence scores"""
-    # Apply softmax to get probabilities
-    probs = F.softmax(predictions, dim=1)[0]
+    # Get probabilities
+    probs = predictions[0]
     
-    # Get top K indices and values
-    top_probs, top_indices = torch.topk(probs, min(top_k, len(probs)))
+    # Get top K indices
+    top_indices = np.argsort(probs)[-top_k:][::-1]
     
     # Create list of predictions
     top_predictions = []
-    for prob, idx in zip(top_probs.cpu().numpy(), top_indices.cpu().numpy()):
+    for idx in top_indices:
         top_predictions.append({
             'class': class_names[idx],
-            'confidence': float(prob)
+            'confidence': float(probs[idx])
         })
     
     return top_predictions
@@ -171,7 +139,7 @@ async def root():
     return {
         "message": "Plant Disease Detection API",
         "version": "1.0.0",
-        "framework": "PyTorch + EfficientNet",
+        "framework": "TensorFlow/Keras + EfficientNet",
         "endpoints": {
             "health": "/health",
             "predict": "/predict",
@@ -187,7 +155,6 @@ async def health_check():
         status="healthy" if model is not None else "model_not_loaded",
         model_loaded=model is not None,
         num_classes=len(class_names) if class_names else 0,
-        device=str(device) if device else "unknown",
         timestamp=datetime.now().isoformat()
     )
 
@@ -215,14 +182,14 @@ async def predict_disease(file: UploadFile = File(...)):
         Prediction results with confidence scores
     """
     # Check if model is loaded
-    if model is None or label_encoder is None:
+    if model is None:
         raise HTTPException(
             status_code=503, 
             detail="Model not loaded. Please check server logs."
         )
     
     # Validate file type
-    if file.content_type and not file.content_type.startswith('image/'):
+    if not file.content_type.startswith('image/'):
         raise HTTPException(
             status_code=400,
             detail="File must be an image (JPG, JPEG, PNG)"
@@ -234,11 +201,9 @@ async def predict_disease(file: UploadFile = File(...)):
         
         # Preprocess image
         processed_image = preprocess_image(image_bytes)
-        processed_image = processed_image.to(device)
         
         # Make prediction
-        with torch.no_grad():
-            predictions = model(processed_image)
+        predictions = model.predict(processed_image, verbose=0)
         
         # Get top predictions
         top_predictions = get_top_predictions(predictions, top_k=5)
@@ -281,7 +246,7 @@ async def predict_batch(files: List[UploadFile] = File(...)):
     Returns:
         List of prediction results
     """
-    if model is None or label_encoder is None:
+    if model is None:
         raise HTTPException(status_code=503, detail="Model not loaded")
     
     if len(files) > 10:
@@ -296,11 +261,8 @@ async def predict_batch(files: List[UploadFile] = File(...)):
         try:
             image_bytes = await file.read()
             processed_image = preprocess_image(image_bytes)
-            processed_image = processed_image.to(device)
             
-            with torch.no_grad():
-                predictions = model(processed_image)
-            
+            predictions = model.predict(processed_image, verbose=0)
             top_predictions = get_top_predictions(predictions, top_k=3)
             
             results.append({
@@ -343,7 +305,7 @@ async def internal_error_handler(request, exc):
 if __name__ == "__main__":
     # Run the API server
     uvicorn.run(
-        "api_service:app",
+        "api_service_keras:app",
         host="0.0.0.0",
         port=5000,
         reload=True,
