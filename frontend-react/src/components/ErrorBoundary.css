@@ -46,6 +46,43 @@
   margin-bottom: 24px;
 }
 
+.error-suggestions {
+  text-align: left;
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.error-suggestions h3 {
+  color: #333;
+  font-size: 18px;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.error-suggestions ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.error-suggestions li {
+  color: #495057;
+  font-size: 14px;
+  line-height: 1.8;
+  padding-left: 24px;
+  position: relative;
+}
+
+.error-suggestions li:before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: #667eea;
+  font-weight: bold;
+}
+
 .error-details {
   text-align: left;
   margin: 24px 0;
@@ -87,7 +124,8 @@
   flex-wrap: wrap;
 }
 
-.error-actions button {
+.error-actions button,
+.error-actions a {
   padding: 12px 24px;
   border: none;
   border-radius: 8px;
@@ -95,6 +133,8 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .btn-reset {
@@ -118,6 +158,17 @@
   border-color: #adb5bd;
 }
 
+.btn-home {
+  background: #2D5016;
+  color: white;
+}
+
+.btn-home:hover {
+  background: #1f3810;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(45, 80, 22, 0.4);
+}
+
 /* Mobile responsive */
 @media (max-width: 768px) {
   .error-boundary-content {
@@ -136,7 +187,8 @@
     flex-direction: column;
   }
 
-  .error-actions button {
+  .error-actions button,
+  .error-actions a {
     width: 100%;
   }
 }

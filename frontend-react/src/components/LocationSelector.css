@@ -1,0 +1,151 @@
+/* Location Selector Styles */
+
+.location-selector {
+  margin-bottom: var(--spacing-xl);
+}
+
+.location-selector-card {
+  background-color: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.location-selector-title {
+  font-size: var(--font-size-2xl);
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-md);
+  text-align: center;
+}
+
+/* Location Form */
+.location-form {
+  margin-bottom: var(--spacing-md);
+}
+
+.location-input-group {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.location-input {
+  flex: 1;
+  padding: 12px 16px;
+  font-size: var(--font-size-base);
+  border: 2px solid var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast);
+  font-family: var(--font-body);
+}
+
+.location-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.location-input:disabled {
+  background-color: var(--color-bg-secondary);
+  cursor: not-allowed;
+}
+
+/* Divider */
+.location-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: var(--spacing-md) 0;
+  color: var(--color-text-secondary);
+}
+
+.location-divider::before,
+.location-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--color-bg-secondary);
+}
+
+.location-divider span {
+  padding: 0 var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+/* Use GPS Button */
+.use-gps-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+}
+
+.gps-icon {
+  font-size: var(--font-size-xl);
+}
+
+/* Selected Location Display */
+.selected-location {
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-md);
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  border-left: 4px solid var(--color-success);
+}
+
+.location-icon {
+  font-size: var(--font-size-xl);
+}
+
+.location-name {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  flex: 1;
+}
+
+.location-coords {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* Error Message */
+.location-error {
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-sm);
+  background-color: #fee;
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--color-error);
+  font-size: var(--font-size-sm);
+}
+
+/* Responsive Design */
+@media (max-width: 767px) {
+  .location-selector-card {
+    padding: var(--spacing-md);
+  }
+
+  .location-input-group {
+    flex-direction: column;
+  }
+
+  .location-input-group .btn {
+    width: 100%;
+  }
+
+  .selected-location {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .location-coords {
+    font-size: var(--font-size-xs);
+  }
+}

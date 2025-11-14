@@ -1,0 +1,181 @@
+/* Market Prices Page Styles - KrishiRaksha Theme */
+
+.market-prices-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.market-prices-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  gap: 24px;
+}
+
+.header-content {
+  flex: 1;
+}
+
+.page-title {
+  font-size: 36px;
+  font-weight: 700;
+  color: #2C3E50;
+  margin: 0 0 8px 0;
+}
+
+.page-description {
+  font-size: 16px;
+  color: #666;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.auto-selected-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  border: 2px solid #4caf50;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 15px;
+  color: #2e7d32;
+  animation: slideInDown 0.5s ease-out;
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.banner-icon {
+  font-size: 24px;
+}
+
+.auto-selected-banner strong {
+  font-weight: 700;
+  color: #1b5e20;
+  text-transform: capitalize;
+}
+
+.refresh-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background-color: #2D5016;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.refresh-button:hover:not(:disabled) {
+  background-color: #234012;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(45, 80, 22, 0.3);
+}
+
+.refresh-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.refresh-icon {
+  font-size: 20px;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.refresh-icon.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.last-updated {
+  text-align: right;
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 16px;
+}
+
+.error-message {
+  background-color: #FFF3F3;
+  border: 1px solid #E74C3C;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #C0392B;
+}
+
+.error-icon {
+  font-size: 24px;
+}
+
+.charts-section {
+  margin-bottom: 24px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .market-prices-page {
+    padding: 24px 16px;
+  }
+
+  .market-prices-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .page-title {
+    font-size: 28px;
+  }
+
+  .page-description {
+    font-size: 14px;
+  }
+
+  .refresh-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .last-updated {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 24px;
+  }
+
+  .refresh-button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}

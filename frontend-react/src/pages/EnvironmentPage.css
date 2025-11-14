@@ -1,0 +1,98 @@
+/* Environmental Monitoring Page Styles */
+
+.environment-page {
+  padding: var(--spacing-lg) 0;
+  min-height: calc(100vh - 200px);
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.page-title {
+  font-size: var(--font-size-4xl);
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.page-description {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Error Message */
+.error-message {
+  background-color: #fee;
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  margin: var(--spacing-lg) 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.error-icon {
+  font-size: var(--font-size-2xl);
+}
+
+.error-message p {
+  margin: 0;
+  color: var(--color-error);
+  font-weight: 500;
+}
+
+/* Loading Container */
+.loading-container {
+  text-align: center;
+  padding: var(--spacing-2xl);
+}
+
+.loading-container p {
+  margin-top: var(--spacing-md);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-lg);
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: var(--spacing-2xl);
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  margin: var(--spacing-xl) 0;
+}
+
+.empty-icon {
+  font-size: 64px;
+  display: block;
+  margin-bottom: var(--spacing-md);
+}
+
+.empty-state h3 {
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.empty-state p {
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 767px) {
+  .environment-page {
+    padding: var(--spacing-md) 0;
+  }
+
+  .page-title {
+    font-size: var(--font-size-3xl);
+  }
+
+  .page-description {
+    font-size: var(--font-size-base);
+  }
+}

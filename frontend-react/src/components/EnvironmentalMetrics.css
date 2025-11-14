@@ -1,0 +1,193 @@
+/* Environmental Metrics Styles */
+
+.environmental-metrics {
+  margin-bottom: var(--spacing-xl);
+}
+
+.metrics-title {
+  font-size: var(--font-size-3xl);
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-lg);
+  text-align: center;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-md);
+}
+
+.metrics-grid.with-soil {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* Metric Card */
+.metric-card {
+  background-color: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  transition: all var(--transition-fast);
+}
+
+.metric-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+}
+
+.metric-icon {
+  font-size: 48px;
+  margin-bottom: var(--spacing-sm);
+}
+
+.metric-label {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-md);
+  font-weight: 500;
+}
+
+.metric-value-large {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.metric-description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* Gauge Styles */
+.gauge-container {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto var(--spacing-sm);
+}
+
+.gauge {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.gauge-background {
+  fill: none;
+  stroke: var(--color-bg-secondary);
+  stroke-width: 8;
+}
+
+.gauge-progress {
+  fill: none;
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.5s ease;
+}
+
+.gauge-green {
+  stroke: var(--color-success);
+}
+
+.gauge-yellow {
+  stroke: var(--color-warning);
+}
+
+.gauge-orange {
+  stroke: #ff9800;
+}
+
+.gauge-red {
+  stroke: var(--color-error);
+}
+
+.gauge-blue {
+  stroke: var(--color-info);
+}
+
+.gauge-purple {
+  stroke: #9c27b0;
+}
+
+.gauge-maroon {
+  stroke: #800000;
+}
+
+.gauge-text {
+  font-size: 18px;
+  font-weight: 700;
+  fill: var(--color-text-primary);
+  transform: rotate(90deg);
+  transform-origin: center;
+}
+
+/* Metric Status */
+.metric-status {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  display: inline-block;
+}
+
+.status-green {
+  background-color: #e8f5e9;
+  color: var(--color-success);
+}
+
+.status-yellow {
+  background-color: #fff9e6;
+  color: var(--color-warning);
+}
+
+.status-orange {
+  background-color: #fff3e0;
+  color: #ff9800;
+}
+
+.status-red {
+  background-color: #ffebee;
+  color: var(--color-error);
+}
+
+.status-blue {
+  background-color: #e3f2fd;
+  color: var(--color-info);
+}
+
+.status-purple {
+  background-color: #f3e5f5;
+  color: #9c27b0;
+}
+
+.status-maroon {
+  background-color: #ffebee;
+  color: #800000;
+}
+
+/* Responsive Design */
+@media (max-width: 1023px) {
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metric-card {
+    padding: var(--spacing-md);
+  }
+
+  .gauge-container {
+    width: 100px;
+    height: 100px;
+  }
+
+  .gauge-text {
+    font-size: 16px;
+  }
+}

@@ -1,0 +1,67 @@
+/* Price Trend Chart Styles */
+
+.trend-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.trend-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2C3E50;
+}
+
+.trend-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.trend-button {
+  padding: 8px 16px;
+  background: white;
+  border: 2px solid #E0E0E0;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #2C3E50;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.trend-button:hover {
+  border-color: #2D5016;
+  background-color: #F5F5F5;
+}
+
+.trend-button.active {
+  background-color: #2D5016;
+  border-color: #2D5016;
+  color: white;
+  font-weight: 600;
+}
+
+.trend-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(45, 80, 22, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .trend-controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .trend-buttons {
+    width: 100%;
+  }
+
+  .trend-button {
+    flex: 1;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+}

@@ -1,17 +1,17 @@
 .results-section {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: var(--spacing-md);
 }
 
 /* Disease Card */
 .disease-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
   overflow: hidden;
-  margin-bottom: 30px;
-  transition: transform 0.2s, box-shadow 0.2s;
+  margin-bottom: var(--spacing-lg);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
   animation: slideInUp 0.5s ease-out;
 }
 
@@ -28,14 +28,14 @@
 
 .disease-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-lg);
 }
 
 .disease-image-container {
   width: 100%;
   height: 300px;
   overflow: hidden;
-  background: #f5f5f5;
+  background: var(--color-bg-secondary);
 }
 
 .result-image {
@@ -45,33 +45,34 @@
 }
 
 .disease-info {
-  padding: 24px;
+  padding: var(--spacing-md);
 }
 
 .disease-name {
-  font-size: 28px;
+  font-size: var(--font-size-3xl);
   font-weight: 700;
-  color: #2c3e50;
-  margin: 0 0 20px 0;
+  font-family: var(--font-heading);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-md) 0;
 }
 
 /* Confidence Display */
 .confidence-display {
-  margin-bottom: 20px;
+  margin-bottom: var(--spacing-md);
 }
 
 .confidence-bar-container {
   width: 100%;
   height: 12px;
-  background: #e0e0e0;
-  border-radius: 6px;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
   overflow: hidden;
-  margin-bottom: 8px;
+  margin-bottom: var(--spacing-xs);
 }
 
 .confidence-bar {
   height: 100%;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   transition: width 1s ease-out;
   animation: fillBar 1s ease-out;
 }
@@ -83,40 +84,41 @@
 }
 
 .confidence-bar.high {
-  background: linear-gradient(90deg, #4caf50, #66bb6a);
+  background: linear-gradient(90deg, var(--color-success), #66bb6a);
 }
 
 .confidence-bar.low {
-  background: linear-gradient(90deg, #ff9800, #ffb74d);
+  background: linear-gradient(90deg, var(--color-warning), #ffb74d);
 }
 
 .confidence-text {
-  font-size: 16px;
-  color: #555;
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
   margin: 0;
 }
 
 .confidence-text strong {
-  color: #2c3e50;
-  font-size: 18px;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-lg);
+  font-family: var(--font-heading);
 }
 
 /* Low Confidence Warning */
 .low-confidence-warning {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  padding: 16px;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
   background: #fff3e0;
-  border: 2px solid #ff9800;
-  border-radius: 8px;
-  margin: 20px 0;
+  border: 2px solid var(--color-warning);
+  border-radius: var(--radius-md);
+  margin: var(--spacing-md) 0;
 }
 
 .warning-icon {
   width: 24px;
   height: 24px;
-  color: #ff9800;
+  color: var(--color-warning);
   flex-shrink: 0;
   margin-top: 2px;
 }
@@ -128,29 +130,31 @@
 .warning-content strong {
   display: block;
   color: #e65100;
-  font-size: 16px;
-  margin-bottom: 4px;
+  font-size: var(--font-size-base);
+  font-family: var(--font-heading);
+  margin-bottom: var(--spacing-xs);
 }
 
 .warning-content p {
   margin: 0;
   color: #f57c00;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   line-height: 1.5;
 }
 
 /* Alternative Predictions */
 .alternative-predictions {
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid #e0e0e0;
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-bg-secondary);
 }
 
 .alternative-predictions h3 {
-  font-size: 18px;
+  font-size: var(--font-size-lg);
   font-weight: 600;
-  color: #2c3e50;
-  margin: 0 0 12px 0;
+  font-family: var(--font-heading);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-sm) 0;
 }
 
 .predictions-list {
@@ -163,11 +167,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 12px;
-  background: #f8f9fa;
-  border-radius: 6px;
-  margin-bottom: 8px;
-  transition: background 0.2s;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-xs);
+  transition: background var(--transition-fast);
 }
 
 .prediction-item:hover {
@@ -175,38 +179,212 @@
 }
 
 .prediction-name {
-  font-size: 15px;
-  color: #495057;
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
 }
 
 .prediction-confidence {
   font-weight: 600;
-  color: #6c757d;
+  font-family: var(--font-heading);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+/* Market Information Section */
+.market-info-section {
+  margin-top: 40px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  animation: slideInUp 0.5s ease-out 0.4s both;
+}
+
+.market-info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.market-info-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.toggle-market-btn {
+  padding: 12px 24px;
+  background: #2D5016;
+  color: white;
+  border: none;
+  border-radius: 8px;
   font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.toggle-market-btn:hover {
+  background: #1e3610;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(45, 80, 22, 0.3);
+}
+
+.market-info-content {
+  padding: 24px;
+}
+
+.market-loading {
+  text-align: center;
+  padding: 40px;
+  color: #7f8c8d;
+  font-size: 16px;
+}
+
+.market-charts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.market-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 2px solid #e0e0e0;
+}
+
+.view-full-market-btn,
+.view-harvest-btn {
+  flex: 1;
+  padding: 16px 24px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.view-full-market-btn {
+  background: linear-gradient(135deg, #2D5016 0%, #3d6b1f 100%);
+  color: white;
+}
+
+.view-full-market-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(45, 80, 22, 0.3);
+}
+
+.view-harvest-btn {
+  background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+  color: white;
+}
+
+.view-harvest-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(243, 156, 18, 0.3);
+}
+
+/* Floating Chatbot Button */
+.chatbot-toggle-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+  color: white;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chatbot-toggle-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.chatbot-toggle-btn:active {
+  transform: scale(0.95);
+}
+
+.chatbot-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff5722;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
 }
 
 /* Chatbot Interface */
 .chatbot {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  max-height: 600px;
+  position: fixed;
+  bottom: 100px;
+  right: 30px;
+  width: 500px;
+  max-width: calc(100vw - 60px);
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  padding: var(--spacing-lg);
+  max-height: 650px;
   display: flex;
   flex-direction: column;
-  animation: slideInUp 0.5s ease-out 0.2s both;
+  animation: slideInRight 0.3s ease-out;
+  z-index: 999;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .messages {
   flex: 1;
   overflow-y: auto;
-  margin-bottom: 20px;
-  padding: 10px;
-  max-height: 400px;
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-sm);
+  max-height: 450px;
 }
 
 .message {
-  margin-bottom: 16px;
+  margin-bottom: var(--spacing-sm);
   animation: fadeIn 0.3s ease;
 }
 
@@ -231,21 +409,21 @@
 
 .message-content {
   display: inline-block;
-  padding: 12px 16px;
-  border-radius: 12px;
+  padding: var(--spacing-sm) var(--spacing-sm);
+  border-radius: var(--radius-lg);
   max-width: 80%;
   word-wrap: break-word;
   white-space: pre-wrap;
 }
 
 .message.user .message-content {
-  background: #4caf50;
-  color: white;
+  background: var(--color-primary);
+  color: var(--color-text-light);
 }
 
 .message.assistant .message-content {
-  background: #f1f3f4;
-  color: #2c3e50;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
 }
 
 .cursor {
@@ -262,68 +440,70 @@
 .suggested-questions {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-md);
 }
 
 .suggested-btn {
-  padding: 10px 16px;
-  background: #e3f2fd;
-  border: 1px solid #2196f3;
-  border-radius: 20px;
-  color: #1976d2;
-  font-size: 14px;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: #e8f5e9;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-full);
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-heading);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
 }
 
 .suggested-btn:hover {
-  background: #2196f3;
-  color: white;
+  background: var(--color-primary);
+  color: var(--color-text-light);
   transform: translateY(-1px);
 }
 
 /* Input Area */
 .input-area {
   display: flex;
-  gap: 10px;
-  padding-top: 16px;
-  border-top: 1px solid #e0e0e0;
+  gap: var(--spacing-xs);
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--color-bg-secondary);
 }
 
 .input-area input {
   flex: 1;
-  padding: 12px 16px;
+  padding: var(--spacing-sm) var(--spacing-sm);
   border: 1px solid #ddd;
-  border-radius: 24px;
-  font-size: 15px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-base);
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color var(--transition-fast);
 }
 
 .input-area input:focus {
-  border-color: #4caf50;
+  border-color: var(--color-primary);
 }
 
 .input-area input:disabled {
-  background: #f5f5f5;
+  background: var(--color-bg-secondary);
   cursor: not-allowed;
 }
 
 .input-area button {
-  padding: 12px 24px;
-  background: #4caf50;
-  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-primary);
+  color: var(--color-text-light);
   border: none;
-  border-radius: 24px;
-  font-size: 15px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-base);
   font-weight: 600;
+  font-family: var(--font-heading);
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background var(--transition-fast);
 }
 
 .input-area button:hover:not(:disabled) {
-  background: #45a049;
+  background: var(--color-primary-hover);
 }
 
 .input-area button:disabled {
@@ -332,13 +512,13 @@
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .results-section {
-    padding: 10px;
+    padding: var(--spacing-xs);
   }
 
   .disease-card {
-    margin-bottom: 20px;
+    margin-bottom: var(--spacing-md);
   }
 
   .disease-image-container {
@@ -346,11 +526,11 @@
   }
 
   .disease-info {
-    padding: 16px;
+    padding: var(--spacing-sm);
   }
 
   .disease-name {
-    font-size: 22px;
+    font-size: var(--font-size-2xl);
   }
 
   .low-confidence-warning {
@@ -361,6 +541,26 @@
   .warning-icon {
     width: 20px;
     height: 20px;
+  }
+
+  .chatbot-toggle-btn {
+    bottom: 20px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    font-size: 24px;
+  }
+
+  .chatbot-badge {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+
+  .chatbot {
+    bottom: 85px;
+    right: 20px;
+    width: calc(100vw - 40px);
+    max-height: 500px;
   }
 
   .message-content {
@@ -386,22 +586,22 @@
 
 @media (max-width: 480px) {
   .disease-name {
-    font-size: 20px;
+    font-size: var(--font-size-xl);
   }
 
   .confidence-text {
-    font-size: 14px;
+    font-size: var(--font-size-sm);
   }
 
   .confidence-text strong {
-    font-size: 16px;
+    font-size: var(--font-size-base);
   }
 
   .warning-content strong {
-    font-size: 14px;
+    font-size: var(--font-size-sm);
   }
 
   .warning-content p {
-    font-size: 13px;
+    font-size: var(--font-size-xs);
   }
 }

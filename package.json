@@ -11,7 +11,22 @@
     "dev": "concurrently \"npm run start:ml\" \"npm run start:backend\" \"npm run start:frontend\" --names \"ML,Backend,Frontend\" --prefix-colors \"blue,green,yellow\"",
     "dev:backend": "nodemon backend/server.js",
     "start:old": "node chatbot-server.js",
-    "test:backend": "jest backend/server.test.js --forceExit"
+    "test:backend": "jest backend/server.test.js --forceExit",
+    "test:integration": "jest backend/integration.test.js --forceExit",
+    "test:e2e": "jest e2e/ --forceExit --runInBand",
+    "test:all": "npm run test:backend && npm run test:integration && cd frontend-react && npm test -- --watchAll=false",
+    "build": "cd frontend-react && npm run build",
+    "build:analyze": "cd frontend-react && npm run build -- --stats && npx webpack-bundle-analyzer build/bundle-stats.json",
+    "deploy:setup": "npm install && cd frontend-react && npm install && cd .. && pip install -r requirements_ml.txt",
+    "deploy:build": "npm run build",
+    "deploy:pm2": "pm2 start ecosystem.config.js --env production",
+    "deploy:pm2:dev": "pm2 start ecosystem.config.js",
+    "deploy:stop": "pm2 stop all",
+    "deploy:restart": "pm2 restart all",
+    "deploy:logs": "pm2 logs",
+    "deploy:status": "pm2 status",
+    "deploy:monitor": "pm2 monit",
+    "production": "NODE_ENV=production npm start"
   },
   "keywords": [
     "agriculture",

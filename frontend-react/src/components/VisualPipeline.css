@@ -1,20 +1,20 @@
 .pipeline-section {
   max-width: 800px;
-  margin: 2rem auto;
-  padding: 1.5rem;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: var(--spacing-lg) auto;
+  padding: var(--spacing-md);
+  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, #e9ecef 100%);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
 }
 
 .pipeline-step {
   display: flex;
   align-items: center;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  background: white;
-  border-radius: 8px;
-  transition: all 0.3s ease;
+  padding: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
   position: relative;
   overflow: hidden;
 }
@@ -33,10 +33,10 @@
   filter: grayscale(100%);
 }
 
-/* Active state - blue with animation */
+/* Active state - green with animation */
 .pipeline-step.active {
-  border-left: 4px solid #3b82f6;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+  border-left: 4px solid var(--color-primary);
+  box-shadow: 0 2px 8px rgba(45, 80, 22, 0.3);
   animation: pulse 2s ease-in-out infinite;
 }
 
@@ -47,22 +47,22 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+  background: linear-gradient(90deg, transparent, rgba(45, 80, 22, 0.1), transparent);
   animation: shimmer 1.5s infinite;
 }
 
 /* Complete state - green with checkmark */
 .pipeline-step.complete {
-  border-left: 4px solid #10b981;
-  background: linear-gradient(to right, #f0fdf4, white);
+  border-left: 4px solid var(--color-success);
+  background: linear-gradient(to right, #e8f5e9, var(--color-bg-primary));
 }
 
 .step-icon {
   font-size: 2rem;
-  margin-right: 1rem;
+  margin-right: var(--spacing-sm);
   min-width: 50px;
   text-align: center;
-  transition: transform 0.3s ease;
+  transition: transform var(--transition-base);
 }
 
 .pipeline-step.active .step-icon {
@@ -78,26 +78,27 @@
 }
 
 .step-label {
-  font-size: 1.1rem;
+  font-size: var(--font-size-lg);
   font-weight: 600;
-  color: #1f2937;
-  margin-bottom: 0.25rem;
+  font-family: var(--font-heading);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xs);
 }
 
 .pipeline-step.pending .step-label {
-  color: #6b7280;
+  color: var(--color-text-secondary);
 }
 
 .step-message {
-  font-size: 0.9rem;
-  color: #6b7280;
-  margin-top: 0.25rem;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-top: var(--spacing-xs);
   font-style: italic;
 }
 
 .step-status {
   font-size: 1.5rem;
-  color: #10b981;
+  color: var(--color-success);
   font-weight: bold;
   min-width: 30px;
   text-align: center;
@@ -105,7 +106,7 @@
 
 .spinner {
   animation: spin 1s linear infinite;
-  color: #3b82f6;
+  color: var(--color-primary);
 }
 
 /* Animations */
@@ -146,14 +147,14 @@
 }
 
 /* Responsive design */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .pipeline-section {
-    margin: 1rem;
-    padding: 1rem;
+    margin: var(--spacing-sm);
+    padding: var(--spacing-sm);
   }
 
   .pipeline-step {
-    padding: 0.75rem;
+    padding: var(--spacing-xs);
   }
 
   .step-icon {
@@ -162,10 +163,10 @@
   }
 
   .step-label {
-    font-size: 1rem;
+    font-size: var(--font-size-base);
   }
 
   .step-message {
-    font-size: 0.85rem;
+    font-size: var(--font-size-xs);
   }
 }

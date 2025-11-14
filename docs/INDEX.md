@@ -253,3 +253,173 @@ start demo.html                # Browser
 **Ready**: YES! 🚀
 
 **Need help?** Start with [Project Overview](PROJECT-OVERVIEW.md)
+
+
+---
+
+## 🌾 KrishiRaksha Multi-Page Platform Documentation
+
+### New Platform Features
+
+#### User Documentation
+- **[User Guide](USER-GUIDE.md)** - Complete guide for farmers and users
+  - Getting started
+  - Disease detection guide
+  - Market prices guide
+  - Environmental monitoring guide
+  - Harvest calculator guide
+  - Crop calendar guide
+  - Tips and best practices
+  - Troubleshooting
+
+#### Setup Documentation
+- **[Setup Instructions](SETUP-INSTRUCTIONS.md)** - Detailed setup for all features
+  - Prerequisites
+  - Step-by-step installation
+  - Feature-specific setup
+  - Database configuration
+  - Production deployment
+  - Troubleshooting
+
+#### Technical Documentation
+- **[Architecture Guide](ARCHITECTURE.md)** - Multi-page system architecture
+- **[API Reference](API-REFERENCE.md)** - Complete API documentation
+  - Disease detection endpoints
+  - Market prices endpoints
+  - Environmental monitoring endpoints
+  - Harvest calculator endpoints
+  - Crop calendar endpoints
+
+#### Frontend Documentation
+- **[React Frontend README](../frontend-react/README.md)** - Frontend documentation
+  - Multi-page navigation
+  - Component structure
+  - Professional design system
+  - Performance optimizations
+  - Accessibility features
+
+### Platform Pages
+
+1. **Home Page** - Professional landing page with service overview
+2. **Market Prices** - Real-time crop price comparison and trends
+3. **Disease Detection** - AI-powered plant disease diagnosis
+4. **Environmental Monitoring** - Weather, AQI, and farming recommendations
+5. **Harvest Calculator** - Optimize harvest timing for maximum profit
+6. **Crop Calendar** - Plan and track farming activities
+
+### New API Endpoints
+
+#### Market Prices
+- `GET /api/market-prices/:crop` - Get crop prices across markets
+
+#### Environmental Monitoring
+- `GET /api/environment/current?lat=X&lon=Y` - Current weather and AQI
+- `GET /api/environment/forecast?lat=X&lon=Y` - 7-day forecast
+
+#### Harvest Calculator
+- `POST /api/harvest/calculate` - Calculate optimal harvest timing
+
+#### Crop Calendar
+- `GET /api/calendar/events/:userId` - Get calendar events
+- `POST /api/calendar/events` - Create event
+- `PUT /api/calendar/events/:eventId` - Update event
+- `DELETE /api/calendar/events/:eventId` - Delete event
+
+### Database Models
+
+New MongoDB collections:
+- **marketprices** - Crop price data
+- **environmentaldata** - Weather history
+- **harvestcalculations** - Harvest calculations
+- **cropevents** - Calendar events
+
+### Testing New Features
+
+```bash
+# Test environment API
+node test-environment-api.js
+
+# Test harvest calculator
+node test-harvest-calculator.js
+
+# Test crop calendar
+node test-crop-calendar.js
+
+# Test calendar optimistic updates
+node test-calendar-optimistic-updates.js
+
+# Test upcoming activities
+node test-upcoming-activities.js
+```
+
+### Configuration Requirements
+
+#### Weather API Key (Required)
+1. Sign up at [OpenWeatherMap](https://openweathermap.org/api)
+2. Get free API key
+3. Add to `.env` as `WEATHER_API_KEY`
+
+#### Environment Variables
+```bash
+# Required for new features
+WEATHER_API_KEY=your_openweathermap_api_key_here
+
+# Optional
+CACHE_DURATION_MINUTES=30
+FRONTEND_URL=http://localhost:3000
+```
+
+### Quick Start for New Features
+
+```bash
+# 1. Update environment
+cp .env.example .env
+# Add WEATHER_API_KEY to .env
+
+# 2. Start all services
+npm run dev
+
+# 3. Access platform
+# Open http://localhost:3000
+
+# 4. Test features
+# - Navigate to Market Prices
+# - Check Environmental Monitoring
+# - Try Harvest Calculator
+# - Create Calendar Events
+```
+
+### Feature Documentation Links
+
+- **Disease Detection**: [ML Model README](ML-MODEL/README.md)
+- **AI Chatbot**: [Chatbot README](CHATBOT/README.md)
+- **Market Prices**: [API Reference - Market Prices](API-REFERENCE.md#market-prices-endpoints)
+- **Environmental Monitoring**: [API Reference - Environmental](API-REFERENCE.md#environmental-monitoring-endpoints)
+- **Harvest Calculator**: [API Reference - Harvest Calculator](API-REFERENCE.md#harvest-calculator-endpoints)
+- **Crop Calendar**: [API Reference - Crop Calendar](API-REFERENCE.md#crop-calendar-endpoints)
+
+### Troubleshooting New Features
+
+#### Weather API Issues
+- Verify API key in `.env`
+- Check API key is active
+- Verify free tier limits (1000 calls/day)
+- See [Setup Instructions - Weather API](SETUP-INSTRUCTIONS.md#weather-api-not-working)
+
+#### Market Prices Not Loading
+- Currently uses mock data
+- Ready for real API integration
+- See [API Reference](API-REFERENCE.md#market-prices-endpoints)
+
+#### Calendar Events Not Saving
+- Check MongoDB connection
+- Verify user ID format
+- See [User Guide - Crop Calendar](USER-GUIDE.md#crop-calendar)
+
+---
+
+**Platform Status**: ✅ Multi-Page Platform Complete
+**Features**: 6 Major Features Implemented
+**Documentation**: Complete & Up-to-date
+
+🌾 **KrishiRaksha - Empowering Farmers with Smart Agriculture**

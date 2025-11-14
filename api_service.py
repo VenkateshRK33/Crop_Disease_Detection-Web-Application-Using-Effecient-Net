@@ -113,6 +113,75 @@ async def load_model_on_startup():
         print(f"Error loading model: {e}")
         print("API will start but predictions will fail until model is loaded")
 
+def is_leaf_image(image_bytes: bytes) -> tuple[bool, str]:
+    """
+    Check if the uploaded image is likely a plant leaf
+    Returns: (is_valid, message)
+    """
+    try:
+        # Convert bytes to numpy array
+        nparr = np.frombuffer(image_bytes, np.uint8)
+        img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        
+        if img is None:
+            return False, "Failed to decode image"
+        
+        # Convert to HSV for color analysis
+        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+        
+        # Define green color range (healthy leaves)
+        lower_green1 = np.array([35, 30, 30])
+        upper_green1 = np.array([85, 255, 255])
+        
+        # Yellow-green (slightly diseased)
+        lower_green2 = np.array([25, 30, 30])
+        upper_green2 = np.array([35, 255, 255])
+        
+        # Brown/yellow (diseased leaves)
+        lower_brown = np.array([10, 30, 30])
+        upper_brown = np.array([25, 255, 255])
+        
+        # Create masks
+        mask_green1 = cv2.inRange(hsv, lower_green1, upper_green1)
+        mask_green2 = cv2.inRange(hsv, lower_green2, upper_green2)
+        mask_brown = cv2.inRange(hsv, lower_brown, upper_brown)
+        combined_mask = cv2.bitwise_or(cv2.bitwise_or(mask_green1, mask_green2), mask_brown)
+        
+        # Calculate percentage of leaf-like colors
+        total_pixels = img.shape[0] * img.shape[1]
+        leaf_pixels = cv2.countNonZero(combined_mask)
+        leaf_percentage = (leaf_pixels / total_pixels) * 100
+        
+        # More strict threshold - at least 25% leaf-like colors
+        if leaf_percentage < 25:
+            return False, f"❌ This doesn't appear to be a plant leaf image. Please upload a clear photo of a plant leaf. (Only {leaf_percentage:.1f}% plant-like colors detected)"
+        
+        # Check image brightness
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        mean_brightness = np.mean(gray)
+        
+        if mean_brightness < 30:
+            return False, "❌ Image is too dark. Please take a photo with better lighting"
+        
+        if mean_brightness > 240:
+            return False, "❌ Image is too bright. Please avoid overexposure"
+        
+        # Check for texture (leaves have texture, plain backgrounds don't)
+        # Calculate standard deviation of grayscale image
+        std_dev = np.std(gray)
+        if std_dev < 20:
+            return False, "❌ Image appears to be too uniform. Please ensure the leaf fills most of the frame"
+        
+        # Check aspect ratio and size
+        height, width = img.shape[:2]
+        if height < 100 or width < 100:
+            return False, "❌ Image resolution is too low. Please upload a higher quality image"
+        
+        return True, "✓ Valid leaf image detected"
+        
+    except Exception as e:
+        return False, f"❌ Image validation failed: {str(e)}"
+
 def preprocess_image(image_bytes: bytes) -> torch.Tensor:
     """Preprocess uploaded image for model prediction"""
     try:
@@ -232,6 +301,15 @@ async def predict_disease(file: UploadFile = File(...)):
         # Read image bytes
         image_bytes = await file.read()
         
+        # Validate if image is a leaf
+        is_valid, validation_message = is_leaf_image(image_bytes)
+        
+        if not is_valid:
+            raise HTTPException(
+                status_code=400,
+                detail=validation_message
+            )
+        
         # Preprocess image
         processed_image = preprocess_image(image_bytes)
         processed_image = processed_image.to(device)
@@ -246,11 +324,19 @@ async def predict_disease(file: UploadFile = File(...)):
         # Get primary prediction
         primary_prediction = top_predictions[0]
         
-        # Check confidence threshold
-        if primary_prediction['confidence'] < CONFIG['confidence_threshold']:
-            message = f"Low confidence prediction. Consider retaking image."
+        # Check confidence threshold - be more strict
+        confidence_level = primary_prediction['confidence']
+        
+        if confidence_level < 0.3:
+            # Very low confidence - likely not a valid leaf or poor image quality
+            raise HTTPException(
+                status_code=400,
+                detail="⚠️ Very low confidence in prediction. This might not be a clear leaf image. Please:\n1. Ensure the leaf fills most of the frame\n2. Use good lighting\n3. Focus the camera properly\n4. Avoid blurry images"
+            )
+        elif confidence_level < CONFIG['confidence_threshold']:
+            message = f"⚠️ Low confidence prediction ({confidence_level*100:.1f}%). Consider retaking the image with better lighting and focus for more accurate results."
         else:
-            message = "Prediction successful"
+            message = "✓ Prediction successful with good confidence"
         
         return PredictionResponse(
             success=True,

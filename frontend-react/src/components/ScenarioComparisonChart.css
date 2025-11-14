@@ -1,0 +1,183 @@
+.scenario-comparison-chart {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 24px;
+}
+
+.chart-header {
+  margin-bottom: 24px;
+}
+
+.chart-header h3 {
+  color: #2D5016;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.chart-header p {
+  color: #7F8C8D;
+  font-size: 14px;
+  margin: 0;
+}
+
+.chart-container {
+  margin-bottom: 32px;
+  padding: 16px;
+  background: #F8F9FA;
+  border-radius: 8px;
+}
+
+/* Custom Tooltip */
+.custom-tooltip {
+  background: white;
+  border: 2px solid #2D5016;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.tooltip-title {
+  font-weight: 700;
+  color: #2D5016;
+  font-size: 16px;
+  margin: 0 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #F4A300;
+}
+
+.tooltip-profit {
+  font-size: 18px;
+  color: #2C3E50;
+  margin: 8px 0;
+}
+
+.tooltip-detail {
+  font-size: 14px;
+  color: #7F8C8D;
+  margin: 4px 0;
+}
+
+.tooltip-optimal {
+  font-size: 14px;
+  color: #F4A300;
+  font-weight: 600;
+  margin: 8px 0 0 0;
+  padding-top: 8px;
+  border-top: 1px solid #E0E0E0;
+}
+
+/* Comparison Points */
+.comparison-points h4 {
+  color: #2D5016;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.points-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.comparison-point {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border: 2px solid #E0E0E0;
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.2s ease;
+}
+
+.comparison-point:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.comparison-point.optimal {
+  background: linear-gradient(135deg, #FFF9E6 0%, #FFFBF0 100%);
+  border-color: #F4A300;
+  border-width: 3px;
+}
+
+.point-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.point-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #7F8C8D;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.optimal-badge {
+  font-size: 12px;
+  color: #F4A300;
+  font-weight: 700;
+}
+
+.point-profit {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2D5016;
+  margin-bottom: 12px;
+}
+
+.point-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.point-details span {
+  font-size: 13px;
+  color: #7F8C8D;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .scenario-comparison-chart {
+    padding: 24px;
+  }
+
+  .chart-header h3 {
+    font-size: 20px;
+  }
+
+  .chart-container {
+    padding: 12px;
+  }
+
+  .points-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .comparison-point {
+    padding: 16px;
+  }
+
+  .point-profit {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .scenario-comparison-chart {
+    padding: 16px;
+  }
+
+  .chart-header h3 {
+    font-size: 18px;
+  }
+
+  .chart-header p {
+    font-size: 13px;
+  }
+}

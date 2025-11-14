@@ -1,0 +1,84 @@
+/* Price Comparison Chart Styles */
+
+.chart-loading,
+.chart-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+  font-size: 16px;
+}
+
+.custom-tooltip {
+  background: white;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.tooltip-market {
+  font-weight: 600;
+  color: #2C3E50;
+  margin: 0 0 4px 0;
+  font-size: 14px;
+}
+
+.tooltip-price {
+  font-size: 16px;
+  color: #2D5016;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+}
+
+.tooltip-distance {
+  font-size: 12px;
+  color: #666;
+  margin: 0 0 4px 0;
+}
+
+.tooltip-best {
+  font-size: 12px;
+  color: #27AE60;
+  font-weight: 600;
+  margin: 4px 0 0 0;
+}
+
+.price-legend {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #E0E0E0;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #2C3E50;
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+}
+
+.legend-color.best {
+  background-color: #27AE60;
+}
+
+.legend-color.normal {
+  background-color: #2D5016;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .price-legend {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+}

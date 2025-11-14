@@ -46,6 +46,17 @@ class ErrorBoundary extends React.Component {
               We encountered an unexpected error. Don't worry, your data is safe.
             </p>
             
+            <div className="error-suggestions">
+              <h3>What you can try:</h3>
+              <ul>
+                <li>Click "Try Again" to reload this section</li>
+                <li>Refresh the entire page if the problem persists</li>
+                <li>Check your internet connection</li>
+                <li>Clear your browser cache and cookies</li>
+                <li>Try again in a few minutes</li>
+              </ul>
+            </div>
+            
             {process.env.NODE_ENV === 'development' && this.state.error && (
               <details className="error-details">
                 <summary>Error Details (Development Only)</summary>
@@ -69,6 +80,12 @@ class ErrorBoundary extends React.Component {
               >
                 Reload Page
               </button>
+              <a 
+                href="/" 
+                className="btn-home"
+              >
+                Go to Home
+              </a>
             </div>
           </div>
         </div>

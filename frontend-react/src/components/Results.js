@@ -1,4 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
+import PriceComparisonChart from './PriceComparisonChart';
+import PriceTrendChart from './PriceTrendChart';
+import MarketDetailsTable from './MarketDetailsTable';
 import './Results.css';
 
 const API_URL = 'http://localhost:4000';
@@ -15,7 +19,15 @@ function Results({ data }) {
   const [userInput, setUserInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [hasAskedQuestion, setHasAskedQuestion] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const messagesEndRef = useRef(null);
+  
+  // Market data states
+  const [marketData, setMarketData] = useState([]);
+  const [trendData, setTrendData] = useState([]);
+  const [loadingMarket, setLoadingMarket] = useState(false);
+  const [cropType, setCropType] = useState('');
+  const [showMarketInfo, setShowMarketInfo] = useState(false);
 
   // Scroll to bottom when messages change
   const scrollToBottom = () => {
@@ -26,11 +38,49 @@ function Results({ data }) {
     scrollToBottom();
   }, [messages]);
 
-  // Get initial AI advice on mount
+  // Extract crop type from disease name
   useEffect(() => {
-    streamAdvice();
+    if (prediction && prediction.disease) {
+      // Extract crop name from disease (e.g., "Tomato_Bacterial_Spot" -> "tomato")
+      const detectedCrop = prediction.disease.split('_')[0].toLowerCase();
+      setCropType(detectedCrop);
+      
+      // Fetch market data for detected crop
+      fetchMarketData(detectedCrop);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [prediction]);
+
+  // Get initial AI advice when chat is opened for the first time
+  useEffect(() => {
+    if (isChatOpen && messages.length === 0) {
+      streamAdvice();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isChatOpen]);
+
+  // Fetch market data for crop
+  const fetchMarketData = async (crop) => {
+    setLoadingMarket(true);
+    try {
+      const [pricesResponse, trendResponse] = await Promise.all([
+        axios.get(`${API_URL}/api/market-prices/${crop}`),
+        axios.get(`${API_URL}/api/market-prices/${crop}/history?days=30`)
+      ]);
+      
+      if (pricesResponse.data.success) {
+        setMarketData(pricesResponse.data.markets);
+      }
+      
+      if (trendResponse.data.success) {
+        setTrendData(trendResponse.data.trend);
+      }
+    } catch (error) {
+      console.error('Error fetching market data:', error);
+    } finally {
+      setLoadingMarket(false);
+    }
+  };
 
   const streamAdvice = async (question = null) => {
     setIsLoading(true);
@@ -198,8 +248,73 @@ function Results({ data }) {
         </div>
       </div>
 
+      {/* Market Information Section */}
+      <div className="market-info-section">
+        <div className="market-info-header">
+          <h2 className="market-info-title">
+            📊 Market Information for {formatDiseaseName(cropType)}
+          </h2>
+          <button 
+            className="toggle-market-btn"
+            onClick={() => setShowMarketInfo(!showMarketInfo)}
+          >
+            {showMarketInfo ? 'Hide Market Info' : 'Show Market Info'}
+          </button>
+        </div>
+
+        {showMarketInfo && (
+          <div className="market-info-content">
+            {loadingMarket ? (
+              <div className="market-loading">Loading market data...</div>
+            ) : (
+              <>
+                <div className="market-charts">
+                  <PriceComparisonChart 
+                    data={marketData}
+                    loading={loadingMarket}
+                  />
+                  <PriceTrendChart 
+                    data={trendData}
+                    loading={loadingMarket}
+                  />
+                </div>
+                <MarketDetailsTable 
+                  data={marketData}
+                  loading={loadingMarket}
+                />
+                <div className="market-actions">
+                  <a 
+                    href={`/market-prices?crop=${cropType}`}
+                    className="view-full-market-btn"
+                  >
+                    View Full Market Analysis →
+                  </a>
+                  <a 
+                    href={`/harvest-calculator?crop=${cropType}`}
+                    className="view-harvest-btn"
+                  >
+                    Calculate Harvest for {formatDiseaseName(cropType)} →
+                  </a>
+                </div>
+              </>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Floating Chatbot Button */}
+      <button 
+        className="chatbot-toggle-btn"
+        onClick={() => setIsChatOpen(!isChatOpen)}
+        aria-label="Toggle AI Assistant"
+      >
+        {isChatOpen ? '✕' : '💬'}
+        {!isChatOpen && <span className="chatbot-badge">AI Assistant</span>}
+      </button>
+
       {/* Chatbot Interface */}
-      <div className="chatbot">
+      {isChatOpen && (
+        <div className="chatbot">
         <div className="messages">
           {messages.map(msg => (
             <div key={msg.id} className={`message ${msg.role}`}>
@@ -242,7 +357,8 @@ function Results({ data }) {
             {isLoading ? 'Sending...' : 'Send'}
           </button>
         </div>
-      </div>
+        </div>
+      )}
     </div>
   );
 }

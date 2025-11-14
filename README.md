@@ -1,29 +1,67 @@
-# 🌱 Plant Disease AI Assistant
+# 🌾 KrishiRaksha (कृषि रक्षा) - Smart Agriculture Platform
 
-> AI-powered early detection of crop pests and diseases for sustainable farming
+> Comprehensive AI-powered platform empowering farmers with disease detection, market intelligence, environmental monitoring, and harvest optimization
 
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-success)]()
 [![ML Accuracy](https://img.shields.io/badge/ML%20Accuracy-95%25%2B-blue)]()
+[![Platform](https://img.shields.io/badge/Platform-Multi--Page-orange)]()
 [![API Cost](https://img.shields.io/badge/API%20Cost-%240-green)]()
-[![Hackathon](https://img.shields.io/badge/Hackathon-Ready-orange)]()
 
-## 🎯 What is This?
+## 🎯 What is KrishiRaksha?
 
-A complete AI system that helps farmers:
-1. **Detect** plant diseases from photos (95%+ accuracy)
-2. **Get** detailed treatment advice from AI expert
-3. **Ask** follow-up questions in natural language
-4. **Save** their crops with actionable guidance
+KrishiRaksha is a professional multi-page farmer platform that provides:
+1. **Disease Detection** - AI-powered plant disease diagnosis (95%+ accuracy)
+2. **Market Prices** - Real-time crop price comparison across markets
+3. **Environmental Monitoring** - Weather, temperature, humidity, and AQI tracking
+4. **Harvest Calculator** - Optimize harvest timing to maximize profits
+5. **Crop Calendar** - Plan and track farming activities throughout the season
+6. **AI Chatbot** - Interactive expert advice and treatment recommendations
 
 ## ✨ Key Features
 
-- 🔍 **Disease Detection**: 95%+ accuracy on 16 plant diseases
-- 🤖 **AI Expert**: Interactive chatbot with treatment advice
-- 💬 **Fully Interactive**: Ask unlimited follow-up questions
-- 📱 **Mobile-Friendly**: Works on phones for field use
-- 💰 **Zero Cost**: No API fees, runs locally
-- 🌐 **Offline Capable**: Works without internet after setup
-- 📊 **Transparent**: Visual pipeline shows AI thinking process
+### 🔬 Disease Detection
+- 95%+ accuracy on 38+ plant diseases
+- AI-powered image analysis with EfficientNetB3
+- Interactive chatbot for treatment advice
+- Visual pipeline showing AI analysis process
+- Prediction history tracking
+
+### 📊 Market Intelligence
+- Real-time crop price comparison
+- Price trends and historical data
+- Market distance and location information
+- Interactive charts and visualizations
+- Best price recommendations
+
+### 🌤️ Environmental Monitoring
+- Current weather conditions
+- 7-day weather forecast
+- Temperature and humidity trends
+- Air Quality Index (AQI) monitoring
+- Location-based data with GPS support
+- Farming recommendations based on conditions
+
+### 📈 Harvest Optimization
+- Calculate optimal harvest timing
+- Maximize profit while minimizing pest losses
+- Scenario comparison (sell now vs. wait)
+- Confidence scores and detailed analysis
+- Factor in maturity, pest damage, and market prices
+
+### 📅 Crop Planning
+- Interactive calendar interface
+- Track planting, irrigation, and harvest dates
+- Upcoming activities list
+- Event management (add, edit, delete)
+- Mark activities as complete
+
+### 🎨 Professional Design
+- Modern, clean interface with KrishiRaksha branding
+- Responsive design (mobile, tablet, desktop)
+- Deep green and golden yellow color scheme
+- Smooth animations and transitions
+- Bilingual support (English + Hindi)
+- Accessibility compliant (WCAG AA)
 
 ## 🚀 Quick Start
 
@@ -35,6 +73,7 @@ Before you begin, ensure you have the following installed:
 - **Python** 3.8 or higher ([Download](https://www.python.org/))
 - **MongoDB** 4.4 or higher ([Download](https://www.mongodb.com/try/download/community))
 - **Ollama** ([Installation Guide](OLLAMA_SETUP.md))
+- **Weather API Key** - Sign up at [OpenWeatherMap](https://openweathermap.org/api) (free tier available)
 
 ### Installation
 
@@ -158,10 +197,12 @@ node test-backend-complete.js
 
 ### Quick Demo
 1. Open http://localhost:3000 in your browser
-2. Upload a plant image (drag & drop or click to select)
-3. Watch the visual pipeline as AI analyzes the image
-4. Read the disease diagnosis and treatment advice
-5. Ask follow-up questions in the chat interface
+2. **Home Page**: Explore the professional landing page with service overview
+3. **Disease Detection**: Upload a plant image and get AI diagnosis
+4. **Market Prices**: Select a crop and compare prices across markets
+5. **Environment**: Check weather, temperature, humidity, and AQI
+6. **Harvest Calculator**: Calculate optimal harvest timing for maximum profit
+7. **Crop Calendar**: Plan and track your farming activities
 
 ## 📸 Screenshots
 
@@ -201,11 +242,37 @@ AI: **How to Apply Copper Fungicide:**
 ## 🏗️ Architecture
 
 ```
-Browser (demo.html)
-    ↓
-ML API (Port 5000) → EfficientNetB3 → Disease Detection
-    ↓
-Chatbot (Port 4000) → Ollama → Treatment Advice
+┌─────────────────────────────────────────────────────────────┐
+│              React Frontend (Port 3000)                      │
+│  ┌──────────┬──────────┬──────────┬────────────────────┐   │
+│  │   Home   │  Market  │ Disease  │   Environmental    │   │
+│  │   Page   │  Prices  │Detection │    Monitoring      │   │
+│  │          │          │          │                    │   │
+│  │ Harvest  │   Crop   │          │                    │   │
+│  │Calculator│ Calendar │          │                    │   │
+│  └──────────┴──────────┴──────────┴────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│              Node.js Backend (Port 4000)                     │
+│  ┌──────────┬──────────┬──────────┬────────────────────┐   │
+│  │   ML     │  Market  │  Weather │   Harvest          │   │
+│  │  Proxy   │  Prices  │   API    │  Calculator        │   │
+│  │          │          │          │                    │   │
+│  │ Calendar │  Ollama  │          │                    │   │
+│  │  Events  │ Chatbot  │          │                    │   │
+│  └──────────┴──────────┴──────────┴────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│         External Services & Database                         │
+│  ┌──────────┬──────────┬──────────┬────────────────────┐   │
+│  │ ML Model │ Weather  │  Ollama  │     MongoDB        │   │
+│  │(Port 5000)│   API    │  LLM     │                    │   │
+│  └──────────┴──────────┴──────────┴────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ## 📚 Documentation
@@ -225,16 +292,53 @@ Chatbot (Port 4000) → Ollama → Treatment Advice
 - **[Ollama Setup](OLLAMA_SETUP.md)** - Install local LLM
 - **[Integration Success](INTEGRATION_SUCCESS.md)** - Verify everything works
 
-## 🎯 Supported Diseases (16 Classes)
+## 🎯 Platform Pages
 
-### 🍅 Tomato (9 types)
-Late Blight, Early Blight, Bacterial Spot, Septoria Leaf Spot, Leaf Mold, Target Spot, Yellow Leaf Curl Virus, Mosaic Virus, Spider Mites, Healthy
+### 🏠 Home Page
+- Professional hero section with KrishiRaksha branding
+- Service feature cards with navigation
+- Platform impact statistics
+- "Why Choose KrishiRaksha" section
+- Bilingual content (English + Hindi)
 
-### 🥔 Potato (3 types)
-Early Blight, Late Blight, Healthy
+### 📊 Market Prices Page
+- Crop selection dropdown
+- Price comparison charts (bar charts)
+- Price trend visualization (line charts)
+- Market details table with sorting
+- Distance and last updated information
 
-### 🌶️ Pepper (2 types)
-Bacterial Spot, Healthy
+### 🔬 Disease Detection Page
+- Image upload interface (drag & drop)
+- Visual analysis pipeline
+- AI-powered disease diagnosis
+- Interactive chatbot for treatment advice
+- Prediction history tracking
+- 38+ supported plant diseases
+
+### 🌤️ Environmental Monitoring Page
+- Location selector (GPS or manual)
+- Current weather display
+- Temperature, humidity, and AQI metrics
+- 7-day weather forecast
+- Environmental trend charts
+- Farming recommendations
+
+### 📈 Harvest Calculator Page
+- Input form for crop conditions
+- Maturity and pest infestation sliders
+- Market price input
+- Optimal harvest date recommendation
+- Scenario comparison chart
+- Detailed profit analysis
+
+### 📅 Crop Calendar Page
+- Interactive calendar view
+- Add/edit/delete farming events
+- Event type categorization (planting, irrigation, harvest)
+- Upcoming activities list
+- Mark activities as complete
+- Color-coded event types
 
 ## 📊 Performance
 
@@ -248,11 +352,32 @@ Bacterial Spot, Healthy
 
 ## 🛠️ Tech Stack
 
-- **ML**: PyTorch + EfficientNetB3
-- **LLM**: Ollama (minimax-m2:cloud)
-- **Backend**: Python FastAPI + Node.js Express
-- **Frontend**: Vanilla JavaScript
-- **Deployment**: Single machine, no cloud
+### Frontend
+- **React** 19.2.0 - UI library
+- **React Router** v6 - Multi-page navigation
+- **Recharts** - Data visualization
+- **Axios** - HTTP client
+- **CSS3** - Professional styling with animations
+
+### Backend
+- **Node.js** + **Express** - Web server
+- **MongoDB** + **Mongoose** - Database
+- **Multer** - File upload handling
+- **Axios** - External API integration
+
+### ML & AI
+- **PyTorch** + **EfficientNetB3** - Disease detection
+- **FastAPI** - ML service API
+- **Ollama** (minimax-m2:cloud) - AI chatbot
+
+### External APIs
+- **OpenWeatherMap** - Weather and environmental data
+- **Mock Data** - Market prices (ready for real API integration)
+
+### Development Tools
+- **Concurrently** - Run multiple services
+- **Nodemon** - Auto-restart on changes
+- **React Scripts** - Build and dev tools
 
 ## 👨‍💻 Development
 
@@ -287,16 +412,45 @@ npm run dev:backend     # Start backend with nodemon (auto-restart on changes)
 ### Project Structure for Development
 
 ```
-plant-disease-ai/
+krishiraksha/
 ├── frontend-react/          # React frontend application
 │   ├── src/
-│   │   ├── components/      # React components
+│   │   ├── components/      # Reusable React components
+│   │   │   ├── Navigation.js
+│   │   │   ├── Footer.js
+│   │   │   ├── PageLayout.js
 │   │   │   ├── ImageUpload.js
 │   │   │   ├── Results.js
-│   │   │   └── VisualPipeline.js
-│   │   ├── App.js          # Main app component
-│   │   └── App.css         # Global styles
+│   │   │   ├── VisualPipeline.js
+│   │   │   ├── CropSelector.js
+│   │   │   ├── PriceComparisonChart.js
+│   │   │   ├── PriceTrendChart.js
+│   │   │   ├── LocationSelector.js
+│   │   │   ├── EnvironmentalMetrics.js
+│   │   │   ├── WeatherForecast.js
+│   │   │   ├── HarvestCalculatorForm.js
+│   │   │   ├── HarvestRecommendation.js
+│   │   │   ├── ScenarioComparisonChart.js
+│   │   │   ├── Toast.js
+│   │   │   ├── SkeletonLoader.js
+│   │   │   └── EmptyState.js
+│   │   ├── pages/           # Page components
+│   │   │   ├── HomePage.js
+│   │   │   ├── MarketPricesPage.js
+│   │   │   ├── DiseaseDetectionPage.js
+│   │   │   ├── EnvironmentPage.js
+│   │   │   ├── HarvestCalculatorPage.js
+│   │   │   ├── CropCalendarPage.js
+│   │   │   └── NotFoundPage.js
+│   │   ├── contexts/        # React contexts
+│   │   │   └── ToastContext.js
+│   │   ├── App.js          # Main app with routing
+│   │   ├── index.js        # Entry point
+│   │   ├── index.css       # Global styles
+│   │   └── animations.css  # Animation utilities
 │   ├── public/             # Static assets
+│   │   ├── logo.png
+│   │   └── manifest.json
 │   └── package.json        # Frontend dependencies
 │
 ├── backend/                # Node.js backend
@@ -306,14 +460,26 @@ plant-disease-ai/
 │   └── models/            # Mongoose models
 │       ├── User.js
 │       ├── Prediction.js
-│       └── Conversation.js
+│       ├── Conversation.js
+│       ├── MarketPrice.js
+│       ├── EnvironmentalData.js
+│       ├── HarvestCalculation.js
+│       └── CropEvent.js
+│
+├── docs/                   # Documentation
+│   ├── INDEX.md
+│   ├── PROJECT-OVERVIEW.md
+│   ├── ARCHITECTURE.md
+│   ├── API-REFERENCE.md
+│   └── ...
 │
 ├── api_service.py         # Python ML service (FastAPI)
 ├── efficientnet_plant_disease.pth  # Trained model
 ├── requirements_ml.txt    # Python dependencies
 ├── package.json          # Node.js dependencies
 ├── .env                  # Environment configuration
-└── .env.example          # Environment template
+├── .env.example          # Environment template
+└── README.md             # This file
 ```
 
 ### Environment Variables
@@ -327,6 +493,7 @@ All configuration is managed through `.env` file:
 | `OLLAMA_URL` | Ollama service URL | `http://localhost:11434` |
 | `OLLAMA_MODEL` | LLM model to use | `minimax-m2:cloud` |
 | `ML_API_URL` | ML service URL | `http://localhost:5000` |
+| `WEATHER_API_KEY` | OpenWeatherMap API key | *Required* |
 | `NODE_ENV` | Environment mode | `development` |
 | `MAX_FILE_SIZE_MB` | Max upload size | `10` |
 
@@ -906,13 +1073,19 @@ See detailed history in component division docs.
 
 ## 🚀 Future Enhancements
 
-- [ ] User authentication
-- [ ] Save conversations to database
-- [ ] Multi-language support
-- [ ] Voice input
-- [ ] Mobile app
-- [ ] Weather integration
-- [ ] Treatment marketplace
+- [ ] User authentication and profiles
+- [ ] Real-time market price API integration
+- [ ] Soil testing integration
+- [ ] Crop yield prediction
+- [ ] Pest outbreak alerts
+- [ ] Community forum for farmers
+- [ ] Multi-language support (regional languages)
+- [ ] Voice input for accessibility
+- [ ] Mobile app (React Native)
+- [ ] Treatment product marketplace
+- [ ] Government scheme integration
+- [ ] Crop insurance calculator
+- [ ] Farm equipment rental marketplace
 
 ## 📄 License
 

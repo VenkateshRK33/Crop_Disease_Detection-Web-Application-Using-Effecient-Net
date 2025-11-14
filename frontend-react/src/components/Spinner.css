@@ -1,0 +1,75 @@
+/* Spinner Styles */
+
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.spinner {
+  border-radius: 50%;
+  border-style: solid;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Sizes */
+.spinner-small .spinner {
+  width: 20px;
+  height: 20px;
+  border-width: 2px;
+}
+
+.spinner-medium .spinner {
+  width: 40px;
+  height: 40px;
+  border-width: 4px;
+}
+
+.spinner-large .spinner {
+  width: 60px;
+  height: 60px;
+  border-width: 5px;
+}
+
+/* Colors */
+.spinner-primary {
+  border-color: #f0f0f0;
+  border-top-color: #2D5016;
+}
+
+.spinner-secondary {
+  border-color: #f0f0f0;
+  border-top-color: #F4A300;
+}
+
+.spinner-white {
+  border-color: rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+}
+
+/* Text */
+.spinner-text {
+  font-size: 14px;
+  color: #2C3E50;
+  margin: 0;
+}
+
+/* Inline spinner (for buttons) */
+.spinner-inline {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}

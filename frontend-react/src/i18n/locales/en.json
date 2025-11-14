@@ -1,0 +1,156 @@
+{
+  "common": {
+    "appName": "KrishiRaksha",
+    "tagline": "Empowering Indian Farmers",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "retry": "Try Again",
+    "close": "Close",
+    "save": "Save",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "search": "Search",
+    "filter": "Filter",
+    "refresh": "Refresh",
+    "viewMore": "View More",
+    "learnMore": "Learn More"
+  },
+  "nav": {
+    "home": "Home",
+    "diseaseDetection": "Disease Detection",
+    "marketPrices": "Market Prices",
+    "environment": "Weather Monitor",
+    "harvest": "Harvest Optimizer",
+    "cropCalendar": "Crop Calendar"
+  },
+  "home": {
+    "hero": {
+      "title": "AI-Powered Agricultural Assistant",
+      "subtitle": "Detect plant diseases, monitor weather, optimize harvest, and access real-time market prices",
+      "cta": "Get Started"
+    },
+    "features": {
+      "title": "Our Services",
+      "diseaseDetection": {
+        "title": "Disease Detection",
+        "description": "Upload plant images for instant AI-powered disease diagnosis"
+      },
+      "marketPrices": {
+        "title": "Market Prices",
+        "description": "Real-time crop prices across different markets"
+      },
+      "weather": {
+        "title": "Weather Monitor",
+        "description": "Track weather conditions and environmental factors"
+      },
+      "harvest": {
+        "title": "Harvest Optimizer",
+        "description": "Calculate optimal harvest timing and yield predictions"
+      }
+    }
+  },
+  "diseaseDetection": {
+    "title": "Plant Disease Detection",
+    "description": "Upload a photo of your plant to get instant AI-powered disease diagnosis and treatment recommendations",
+    "upload": {
+      "title": "Upload Plant Image",
+      "dragDrop": "Drag and drop an image here, or click to select",
+      "analyzing": "Analyzing image...",
+      "button": "Select Image"
+    },
+    "results": {
+      "disease": "Disease Detected",
+      "confidence": "Confidence",
+      "lowConfidence": "Low Confidence Detection",
+      "lowConfidenceMessage": "Consider retaking the image with better lighting and focus for more accurate results.",
+      "alternatives": "Alternative Possibilities",
+      "chatbot": {
+        "title": "AI Assistant",
+        "placeholder": "Ask a follow-up question...",
+        "send": "Send",
+        "sending": "Sending..."
+      }
+    },
+    "invalidImage": "Invalid image. Please upload a clear photo of a plant leaf."
+  },
+  "marketPrices": {
+    "title": "Market Prices",
+    "description": "Compare real-time crop prices across different markets to make informed selling decisions",
+    "lastUpdated": "Last updated",
+    "selectCrop": "Select Crop",
+    "priceComparison": "Price Comparison Across Markets",
+    "priceTrend": "Price Trend Over Time",
+    "marketDetails": "Market Details",
+    "noData": "No data available",
+    "buying": {
+      "title": "Buy Agricultural Products",
+      "description": "Browse and purchase quality seeds, fertilizers, and equipment at competitive prices",
+      "search": "Search products...",
+      "categories": {
+        "all": "All",
+        "seeds": "Seeds",
+        "fertilizers": "Fertilizers",
+        "pesticides": "Pesticides",
+        "equipment": "Equipment"
+      },
+      "contact": "Contact",
+      "buyNow": "Buy Now",
+      "seller": "Seller",
+      "location": "Location",
+      "quantity": "Quantity",
+      "category": "Category"
+    }
+  },
+  "environment": {
+    "title": "Weather Monitor",
+    "description": "Track real-time weather conditions and environmental factors affecting your crops",
+    "current": "Current Conditions",
+    "forecast": "7-Day Forecast",
+    "temperature": "Temperature",
+    "humidity": "Humidity",
+    "windSpeed": "Wind Speed",
+    "rainfall": "Rainfall",
+    "airQuality": "Air Quality"
+  },
+  "harvest": {
+    "title": "Harvest Optimizer",
+    "description": "Calculate optimal harvest timing and maximize your yield",
+    "cropType": "Crop Type",
+    "plantingDate": "Planting Date",
+    "fieldSize": "Field Size",
+    "calculate": "Calculate",
+    "results": {
+      "harvestDate": "Optimal Harvest Date",
+      "expectedYield": "Expected Yield",
+      "recommendations": "Recommendations"
+    }
+  },
+  "cropCalendar": {
+    "title": "Crop Calendar",
+    "description": "Plan and track your farming activities throughout the season",
+    "addEvent": "Add Event",
+    "eventTypes": {
+      "planting": "Planting",
+      "irrigation": "Irrigation",
+      "fertilization": "Fertilization",
+      "pestControl": "Pest Control",
+      "harvest": "Harvest"
+    }
+  },
+  "footer": {
+    "services": "Services",
+    "resources": "Resources",
+    "support": "Support",
+    "connect": "Connect",
+    "helpline": "Helpline",
+    "email": "Email",
+    "address": "Address",
+    "supportHours": "Support Hours",
+    "copyright": "© 2025 KrishiRaksha. All Rights Reserved.",
+    "madeWith": "Made with ❤️ for Indian Farmers",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "accessibility": "Accessibility"
+  }
+}

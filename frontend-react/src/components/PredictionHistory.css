@@ -1,13 +1,14 @@
 .prediction-history {
   max-width: 800px;
-  margin: 40px auto;
-  padding: 20px;
+  margin: var(--spacing-xl) auto;
+  padding: var(--spacing-md);
 }
 
 .prediction-history h2 {
-  font-size: 28px;
-  color: #2c3e50;
-  margin-bottom: 24px;
+  font-size: var(--font-size-3xl);
+  font-family: var(--font-heading);
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-md);
   text-align: center;
 }
 
@@ -15,10 +16,10 @@
 .history-error,
 .history-empty {
   text-align: center;
-  padding: 40px 20px;
-  background: #f8f9fa;
-  border-radius: 12px;
-  color: #6c757d;
+  padding: var(--spacing-xl) var(--spacing-md);
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-secondary);
 }
 
 .spinner {
@@ -41,61 +42,64 @@
 }
 
 .retry-button {
-  padding: 10px 24px;
-  background: #4CAF50;
-  color: white;
+  padding: var(--spacing-xs) var(--spacing-md);
+  background: var(--color-primary);
+  color: var(--color-text-light);
   border: none;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-heading);
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background var(--transition-fast);
 }
 
 .retry-button:hover {
-  background: #45a049;
+  background: var(--color-primary-hover);
 }
 
 .history-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--spacing-sm);
 }
 
 .history-item {
-  background: white;
-  border: 1px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 20px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-sm);
 }
 
 .history-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-color: #4CAF50;
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-primary);
 }
 
 .history-item-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: var(--spacing-sm);
 }
 
 .history-item-header h3 {
-  font-size: 18px;
-  color: #2c3e50;
+  font-size: var(--font-size-lg);
+  font-family: var(--font-heading);
+  color: var(--color-text-primary);
   margin: 0;
   flex: 1;
 }
 
 .confidence-badge {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 14px;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
   font-weight: 600;
+  font-family: var(--font-heading);
 }
 
 .confidence-badge.high {
@@ -115,10 +119,10 @@
 
 .history-item-details {
   display: flex;
-  gap: 20px;
-  font-size: 14px;
-  color: #6c757d;
-  margin-bottom: 8px;
+  gap: var(--spacing-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-xs);
 }
 
 .crop-type,
@@ -129,47 +133,48 @@
 }
 
 .alternative-predictions {
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid #e9ecef;
-  font-size: 13px;
-  color: #6c757d;
+  margin-top: var(--spacing-sm);
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--color-bg-secondary);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
 }
 
 .alternatives-label {
   font-weight: 600;
-  margin-right: 8px;
+  font-family: var(--font-heading);
+  margin-right: var(--spacing-xs);
 }
 
 .alternatives-list {
-  color: #495057;
+  color: var(--color-text-primary);
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .prediction-history {
-    padding: 16px;
-    margin: 20px auto;
+    padding: var(--spacing-sm);
+    margin: var(--spacing-md) auto;
   }
 
   .prediction-history h2 {
-    font-size: 24px;
+    font-size: var(--font-size-2xl);
   }
 
   .history-item {
-    padding: 16px;
+    padding: var(--spacing-sm);
   }
 
   .history-item-header h3 {
-    font-size: 16px;
+    font-size: var(--font-size-base);
   }
 
   .history-item-details {
     flex-direction: column;
-    gap: 8px;
+    gap: var(--spacing-xs);
   }
 
   .alternative-predictions {
-    font-size: 12px;
+    font-size: var(--font-size-xs);
   }
 }

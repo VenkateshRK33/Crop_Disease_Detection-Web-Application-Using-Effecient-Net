@@ -27,6 +27,8 @@ Currently, the API does not require authentication. User identification is optio
 
 ## Backend API Endpoints
 
+### Core Endpoints
+
 ### Health Check
 
 Check the health status of all services.
@@ -345,6 +347,418 @@ Create a new user or retrieve an existing user by email.
 **Status Codes**:
 - `200 OK`: User created or retrieved
 - `400 Bad Request`: Missing required fields
+- `500 Internal Server Error`: Database error
+
+---
+
+### Market Prices Endpoints
+
+#### Get Market Prices for Crop
+
+Get current market prices for a specific crop across multiple markets.
+
+**Endpoint**: `GET /api/market-prices/:crop`
+
+**URL Parameters**:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `crop` | String | Yes | Crop name (e.g., 'wheat', 'rice', 'tomato') |
+
+**Request Example**:
+```javascript
+const response = await fetch('http://localhost:4000/api/market-prices/wheat');
+```
+
+**Response**:
+```json
+{
+  "success": true,
+  "crop": "wheat",
+  "markets": [
+    {
+      "name": "Delhi Mandi",
+      "location": "Delhi",
+      "price": 2500,
+      "unit": "quintal",
+      "distance": 15,
+      "lastUpdated": "2025-11-14T10:00:00Z"
+    },
+    {
+      "name": "Gurgaon Market",
+      "location": "Haryana",
+      "price": 2650,
+      "unit": "quintal",
+      "distance": 25,
+      "lastUpdated": "2025-11-14T09:30:00Z"
+    }
+  ],
+  "priceHistory": [
+    { "date": "2025-11-01", "avgPrice": 2450 },
+    { "date": "2025-11-02", "avgPrice": 2480 }
+  ]
+}
+```
+
+**Status Codes**:
+- `200 OK`: Prices retrieved successfully
+- `404 Not Found`: Crop not found
+- `500 Internal Server Error`: Server error
+
+---
+
+### Environmental Monitoring Endpoints
+
+#### Get Current Environmental Data
+
+Get current weather and environmental conditions for a location.
+
+**Endpoint**: `GET /api/environment/current`
+
+**Query Parameters**:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `lat` | Number | Yes | Latitude coordinate |
+| `lon` | Number | Yes | Longitude coordinate |
+
+**Request Example**:
+```javascript
+const response = await fetch(
+  'http://localhost:4000/api/environment/current?lat=28.7041&lon=77.1025'
+);
+```
+
+**Response**:
+```json
+{
+  "success": true,
+  "location": {
+    "name": "Delhi",
+    "lat": 28.7041,
+    "lon": 77.1025
+  },
+  "current": {
+    "weather": "Clear",
+    "temperature": 28,
+    "humidity": 65,
+    "windSpeed": 12,
+    "aqi": 45,
+    "aqiCategory": "Good"
+  },
+  "timestamp": "2025-11-14T10:00:00Z"
+}
+```
+
+**Status Codes**:
+- `200 OK`: Data retrieved successfully
+- `400 Bad Request`: Invalid coordinates
+- `503 Service Unavailable`: Weather API unavailable
+- `500 Internal Server Error`: Server error
+
+---
+
+#### Get Weather Forecast
+
+Get 7-day weather forecast for a location.
+
+**Endpoint**: `GET /api/environment/forecast`
+
+**Query Parameters**:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `lat` | Number | Yes | Latitude coordinate |
+| `lon` | Number | Yes | Longitude coordinate |
+| `days` | Number | No | Number of days (default: 7) |
+
+**Request Example**:
+```javascript
+const response = await fetch(
+  'http://localhost:4000/api/environment/forecast?lat=28.7041&lon=77.1025&days=7'
+);
+```
+
+**Response**:
+```json
+{
+  "success": true,
+  "location": {
+    "name": "Delhi",
+    "lat": 28.7041,
+    "lon": 77.1025
+  },
+  "forecast": [
+    {
+      "date": "2025-11-15",
+      "weather": "Sunny",
+      "temperature": 29,
+      "humidity": 60,
+      "icon": "01d"
+    },
+    {
+      "date": "2025-11-16",
+      "weather": "Partly Cloudy",
+      "temperature": 27,
+      "humidity": 65,
+      "icon": "02d"
+    }
+  ],
+  "recommendations": [
+    "Good conditions for irrigation today",
+    "Low humidity - monitor soil moisture"
+  ]
+}
+```
+
+**Status Codes**:
+- `200 OK`: Forecast retrieved successfully
+- `400 Bad Request`: Invalid coordinates
+- `503 Service Unavailable`: Weather API unavailable
+- `500 Internal Server Error`: Server error
+
+---
+
+### Harvest Calculator Endpoints
+
+#### Calculate Optimal Harvest Time
+
+Calculate the optimal harvest date to maximize profit.
+
+**Endpoint**: `POST /api/harvest/calculate`
+
+**Content-Type**: `application/json`
+
+**Request Body**:
+```json
+{
+  "cropType": "tomato",
+  "currentMaturity": 70,
+  "pestInfestation": 20,
+  "currentMarketPrice": 30,
+  "expectedYield": 1000,
+  "userId": "507f1f77bcf86cd799439011"
+}
+```
+
+**Request Parameters**:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `cropType` | String | Yes | Type of crop |
+| `currentMaturity` | Number | Yes | Current maturity percentage (0-100) |
+| `pestInfestation` | Number | Yes | Pest infestation percentage (0-100) |
+| `currentMarketPrice` | Number | Yes | Current market price per kg |
+| `expectedYield` | Number | Yes | Expected yield in kg |
+| `userId` | String | No | User identifier |
+
+**Response**:
+```json
+{
+  "success": true,
+  "calculationId": "507f1f77bcf86cd799439020",
+  "optimal": {
+    "days": 14,
+    "date": "2025-11-28",
+    "maturity": 84,
+    "pestDamage": 34,
+    "effectiveYield": 850,
+    "profit": 45000,
+    "confidence": 85
+  },
+  "scenarios": [
+    {
+      "days": 0,
+      "date": "2025-11-14",
+      "profit": 35000,
+      "label": "Sell Now"
+    },
+    {
+      "days": 7,
+      "date": "2025-11-21",
+      "profit": 42000,
+      "label": "Wait 7 Days"
+    },
+    {
+      "days": 14,
+      "date": "2025-11-28",
+      "profit": 45000,
+      "label": "Optimal"
+    },
+    {
+      "days": 21,
+      "date": "2025-12-05",
+      "profit": 38000,
+      "label": "Wait 21 Days"
+    }
+  ],
+  "recommendation": "Wait 14 days for optimal maturity before pest damage significantly impacts yield.",
+  "analysis": {
+    "currentValue": 35000,
+    "potentialGrowth": 15000,
+    "pestDamageRisk": 5000,
+    "marketTrend": "Stable"
+  }
+}
+```
+
+**Status Codes**:
+- `200 OK`: Calculation successful
+- `400 Bad Request`: Invalid input parameters
+- `500 Internal Server Error`: Server error
+
+---
+
+### Crop Calendar Endpoints
+
+#### Get Calendar Events
+
+Get all calendar events for a user.
+
+**Endpoint**: `GET /api/calendar/events/:userId`
+
+**URL Parameters**:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `userId` | String | Yes | User identifier |
+
+**Query Parameters**:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `startDate` | String | No | Filter events from this date (ISO format) |
+| `endDate` | String | No | Filter events until this date (ISO format) |
+
+**Response**:
+```json
+{
+  "success": true,
+  "count": 5,
+  "events": [
+    {
+      "_id": "507f1f77bcf86cd799439030",
+      "userId": "507f1f77bcf86cd799439011",
+      "cropType": "wheat",
+      "eventType": "irrigation",
+      "date": "2025-11-16T00:00:00Z",
+      "notes": "Water the wheat field",
+      "completed": false,
+      "reminder": true,
+      "createdAt": "2025-11-14T10:00:00Z"
+    }
+  ]
+}
+```
+
+**Status Codes**:
+- `200 OK`: Events retrieved successfully
+- `500 Internal Server Error`: Database error
+
+---
+
+#### Create Calendar Event
+
+Create a new calendar event.
+
+**Endpoint**: `POST /api/calendar/events`
+
+**Content-Type**: `application/json`
+
+**Request Body**:
+```json
+{
+  "userId": "507f1f77bcf86cd799439011",
+  "cropType": "wheat",
+  "eventType": "irrigation",
+  "date": "2025-11-16",
+  "notes": "Water the wheat field",
+  "reminder": true
+}
+```
+
+**Response**:
+```json
+{
+  "success": true,
+  "event": {
+    "_id": "507f1f77bcf86cd799439030",
+    "userId": "507f1f77bcf86cd799439011",
+    "cropType": "wheat",
+    "eventType": "irrigation",
+    "date": "2025-11-16T00:00:00Z",
+    "notes": "Water the wheat field",
+    "completed": false,
+    "reminder": true,
+    "createdAt": "2025-11-14T10:00:00Z"
+  }
+}
+```
+
+**Status Codes**:
+- `201 Created`: Event created successfully
+- `400 Bad Request`: Invalid input
+- `500 Internal Server Error`: Database error
+
+---
+
+#### Update Calendar Event
+
+Update an existing calendar event.
+
+**Endpoint**: `PUT /api/calendar/events/:eventId`
+
+**URL Parameters**:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `eventId` | String | Yes | Event identifier |
+
+**Content-Type**: `application/json`
+
+**Request Body**:
+```json
+{
+  "completed": true,
+  "notes": "Irrigation completed successfully"
+}
+```
+
+**Response**:
+```json
+{
+  "success": true,
+  "event": {
+    "_id": "507f1f77bcf86cd799439030",
+    "completed": true,
+    "notes": "Irrigation completed successfully",
+    "updatedAt": "2025-11-16T10:00:00Z"
+  }
+}
+```
+
+**Status Codes**:
+- `200 OK`: Event updated successfully
+- `404 Not Found`: Event not found
+- `500 Internal Server Error`: Database error
+
+---
+
+#### Delete Calendar Event
+
+Delete a calendar event.
+
+**Endpoint**: `DELETE /api/calendar/events/:eventId`
+
+**URL Parameters**:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `eventId` | String | Yes | Event identifier |
+
+**Response**:
+```json
+{
+  "success": true,
+  "message": "Event deleted successfully"
+}
+```
+
+**Status Codes**:
+- `200 OK`: Event deleted successfully
+- `404 Not Found`: Event not found
 - `500 Internal Server Error`: Database error
 
 ---
