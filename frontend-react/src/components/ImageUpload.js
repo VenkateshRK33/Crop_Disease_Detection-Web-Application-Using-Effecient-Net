@@ -139,20 +139,40 @@ function ImageUpload({ onAnalysisStart, onAnalysisComplete, updatePipelineStep }
       clearTimeout(timeoutId);
       
       // Handle different error types
+      let errorMessage = 'An unexpected error occurred. Please try again.';
+      
       if (error.name === 'AbortError' || error.code === 'ECONNABORTED') {
-        setError('Request timed out. Please try again.');
+        errorMessage = '⏱️ Request timed out. The image might be too large or the server is busy. Please try again.';
       } else if (error.response) {
         // Server responded with error
-        setError(error.response.data.message || 'Error analyzing image. Please try again.');
+        const serverError = error.response.data;
+        
+        if (serverError.detail) {
+          // FastAPI error format (from ML service)
+          errorMessage = serverError.detail;
+        } else if (serverError.message) {
+          // Express error format (from backend)
+          errorMessage = serverError.message;
+        } else if (serverError.error) {
+          errorMessage = serverError.error;
+        }
+        
+        // Add status code context
+        if (error.response.status === 400) {
+          // Bad request - likely validation error
+          console.log('Validation error:', errorMessage);
+        } else if (error.response.status === 503) {
+          errorMessage = '🔧 ML service is currently unavailable. Please try again in a moment.';
+        }
       } else if (error.request) {
         // Network error
-        setError('Network error. Please check your connection and ensure the backend is running.');
-      } else {
-        setError('An unexpected error occurred. Please try again.');
+        errorMessage = '🌐 Network error. Please check your connection and ensure the backend is running.';
       }
       
+      setError(errorMessage);
+      
       // Reset pipeline steps
-      updatePipelineStep(1, 'pending', '');
+      updatePipelineStep(1, 'error', '✗ Analysis failed');
       updatePipelineStep(2, 'pending', '');
       updatePipelineStep(3, 'pending', '');
     } finally {
