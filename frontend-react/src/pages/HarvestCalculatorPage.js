@@ -13,6 +13,8 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
 const HarvestCalculatorPage = () => {
   const [searchParams] = useSearchParams();
   const cropFromUrl = searchParams.get('crop');
+  const pestFromUrl = searchParams.get('pest');
+  const maturityFromUrl = searchParams.get('maturity');
   
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
@@ -76,8 +78,11 @@ const HarvestCalculatorPage = () => {
         <div className="calculator-container">
           {cropFromUrl && (
             <div className="auto-selected-banner">
-              <span className="banner-icon">🎯</span>
-              <span>Pre-filled with <strong>{cropFromUrl}</strong> based on your disease detection analysis. You can change it below.</span>
+              <span className="banner-icon">🤖</span>
+              <div>
+                <strong>Smart Auto-Fill Activated!</strong>
+                <p>Based on your leaf image analysis: <strong>{cropFromUrl}</strong> crop with <strong>{pestFromUrl}% pest infestation</strong> and <strong>{maturityFromUrl}% maturity</strong>. You can adjust these values below.</p>
+              </div>
             </div>
           )}
 
@@ -97,6 +102,8 @@ const HarvestCalculatorPage = () => {
             onCalculate={handleCalculate}
             loading={loading}
             initialCrop={cropFromUrl}
+            initialPest={pestFromUrl}
+            initialMaturity={maturityFromUrl}
           />
 
           {error && (

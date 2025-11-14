@@ -157,7 +157,7 @@ const ollamaClient = new OllamaClient(CONFIG.ollamaUrl, CONFIG.ollamaModel);
 function buildPrompt(diseaseContext) {
   const { diseaseName, confidence, cropType, topPredictions } = diseaseContext;
   
-  return `You are an experienced agricultural expert helping a farmer treat plant diseases.
+  return `You are an experienced agricultural expert helping a farmer treat plant diseases. Provide direct answers without repeating information already given.
 
 Disease Detected: ${diseaseName}
 Confidence: ${confidence}%
@@ -170,7 +170,7 @@ Provide helpful advice with these sections:
 3. **How to prevent it** (3-4 prevention methods for future)
 4. **Timeline** (When to act and how often to check)
 
-Keep your response under 300 words. Use simple language a farmer can understand. Be specific and actionable.`;
+Keep your response under 300 words. Use simple language a farmer can understand. Be specific and actionable. Start your response directly with the information.`;
 }
 
 function getSuggestedQuestions(diseaseName) {
@@ -189,6 +189,45 @@ function getSuggestedQuestions(diseaseName) {
     "How can I prevent this in future?",
     "Is this disease contagious to other plants?"
   ];
+}
+
+// Fallback knowledge base for when Ollama is unavailable
+const FALLBACK_KNOWLEDGE = {
+  'Tomato_Late_blight': {
+    description: 'Late blight is a devastating fungal disease that affects tomatoes and potatoes.',
+    treatments: ['Remove infected plants immediately', 'Apply copper-based fungicides every 7-10 days', 'Improve air circulation'],
+    prevention: ['Plant resistant varieties', 'Space plants 2-3 feet apart', 'Water at soil level', 'Rotate crops'],
+    timeline: 'Act immediately. Disease can spread to entire field in 7-14 days.'
+  },
+  'Tomato_healthy': {
+    description: 'Your tomato plant appears healthy!',
+    treatments: ['No treatment needed', 'Continue regular watering', 'Maintain fertilization schedule'],
+    prevention: ['Water consistently - 1-2 inches per week', 'Fertilize every 2-3 weeks', 'Inspect plants weekly'],
+    timeline: 'Keep up the good work! Check plants weekly.'
+  }
+};
+
+function getFallbackAdvice(diseaseName) {
+  const knowledge = FALLBACK_KNOWLEDGE[diseaseName] || {
+    description: 'Unable to identify specific disease information.',
+    treatments: ['Consult with a local agricultural expert', 'Take clear photos of affected plants', 'Monitor plant health daily'],
+    prevention: ['Maintain good plant hygiene', 'Ensure proper spacing', 'Water appropriately'],
+    timeline: 'Seek expert advice as soon as possible.'
+  };
+  
+  return `**What is this disease?**
+${knowledge.description}
+
+**How to treat it:**
+${knowledge.treatments.map((t, i) => `${i + 1}. ${t}`).join('\n')}
+
+**How to prevent it:**
+${knowledge.prevention.map((p, i) => `${i + 1}. ${p}`).join('\n')}
+
+**Timeline:**
+${knowledge.timeline}
+
+*Note: This is basic information. For best results, consult with a local agricultural extension office.*`;
 }
 
 // ============================================================================
@@ -267,6 +306,16 @@ app.post('/api/analyze', upload.single('image'), async (req, res) => {
 
       // Log error with timestamp
       console.error(`[${new Date().toISOString()}] ML Service Error:`, mlError.message);
+      
+      // Check if it's a validation error (400) from ML service
+      if (mlError.response && mlError.response.status === 400) {
+        const errorDetail = mlError.response.data?.detail || 'Invalid image. Please upload a clear photo of a plant leaf.';
+        return res.status(400).json({ 
+          error: 'Validation error',
+          message: errorDetail,
+          timestamp: new Date().toISOString()
+        });
+      }
       
       // Check if it's a connection error
       if (mlError.code === 'ECONNREFUSED' || mlError.code === 'ENOTFOUND') {
@@ -409,6 +458,9 @@ app.get('/api/chat/stream/:conversationId', async (req, res) => {
   const { conversationId } = req.params;
   const { question } = req.query;
 
+  let fullResponse = '';
+  let responseSent = false;
+
   try {
     // Get conversation from database
     const conversation = await Conversation.findById(conversationId);
@@ -421,6 +473,7 @@ app.get('/api/chat/stream/:conversationId', async (req, res) => {
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
+    res.setHeader('X-Accel-Buffering', 'no'); // Disable nginx buffering
 
     let prompt;
     if (question) {
@@ -442,7 +495,7 @@ app.get('/api/chat/stream/:conversationId', async (req, res) => {
 
 Farmer's question: ${question}
 
-Provide a clear, helpful answer in simple language. Be specific and actionable.`;
+Provide a clear, helpful answer in simple language. Be specific and actionable. Do not repeat the question in your response - answer directly.`;
     } else {
       // Initial advice
       prompt = buildPrompt(conversation.diseaseContext);
@@ -450,27 +503,53 @@ Provide a clear, helpful answer in simple language. Be specific and actionable.`
 
     // Check Ollama availability
     const ollamaHealthy = await ollamaClient.checkHealth();
-    let fullResponse = '';
+    console.log(`[${new Date().toISOString()}] Ollama health: ${ollamaHealthy ? 'healthy' : 'unhealthy'}`);
 
     if (ollamaHealthy) {
       try {
+        console.log(`[${new Date().toISOString()}] Streaming from Ollama...`);
         for await (const chunk of ollamaClient.streamGenerate(prompt)) {
           fullResponse += chunk;
           res.write(`data: ${JSON.stringify({ chunk })}\n\n`);
+          responseSent = true;
         }
         res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
+        console.log(`[${new Date().toISOString()}] Ollama streaming complete`);
       } catch (streamError) {
-        console.error(`[${new Date().toISOString()}] Streaming error:`, streamError.message);
+        console.error(`[${new Date().toISOString()}] Ollama streaming error:`, streamError.message);
         
-        // Check if it's a timeout
-        if (streamError.code === 'ECONNABORTED' || streamError.message.includes('timeout')) {
-          res.write(`data: ${JSON.stringify({ error: 'Request timed out. Please try asking a simpler question.' })}\n\n`);
-        } else {
-          res.write(`data: ${JSON.stringify({ error: 'Failed to generate response. Please try again.' })}\n\n`);
+        // Send fallback if we haven't sent anything yet
+        if (!responseSent) {
+          const fallback = getFallbackAdvice(conversation.diseaseContext.diseaseName);
+          fullResponse = fallback;
+          
+          // Stream fallback word by word
+          const words = fallback.split(' ');
+          for (let i = 0; i < words.length; i++) {
+            const word = words[i] + (i < words.length - 1 ? ' ' : '');
+            res.write(`data: ${JSON.stringify({ chunk: word })}\n\n`);
+            responseSent = true;
+            await new Promise(resolve => setTimeout(resolve, 30));
+          }
         }
+        res.write(`data: ${JSON.stringify({ done: true, fallback: true })}\n\n`);
       }
     } else {
-      res.write(`data: ${JSON.stringify({ error: 'AI service unavailable. Please try again later.' })}\n\n`);
+      // Use fallback knowledge when Ollama is not available
+      console.log(`[${new Date().toISOString()}] Using fallback knowledge (Ollama unavailable)`);
+      const fallback = getFallbackAdvice(conversation.diseaseContext.diseaseName);
+      fullResponse = fallback;
+      
+      // Stream fallback word by word for better UX
+      const words = fallback.split(' ');
+      for (let i = 0; i < words.length; i++) {
+        const word = words[i] + (i < words.length - 1 ? ' ' : '');
+        res.write(`data: ${JSON.stringify({ chunk: word })}\n\n`);
+        responseSent = true;
+        await new Promise(resolve => setTimeout(resolve, 30));
+      }
+      
+      res.write(`data: ${JSON.stringify({ done: true, fallback: true })}\n\n`);
     }
 
     // Save assistant response
@@ -481,8 +560,15 @@ Provide a clear, helpful answer in simple language. Be specific and actionable.`
     res.end();
 
   } catch (error) {
-    console.error('Chat error:', error);
-    res.status(500).json({ error: 'Failed to process chat' });
+    console.error(`[${new Date().toISOString()}] Chat error:`, error);
+    
+    // Always try to send something to the client
+    if (!responseSent) {
+      const errorMessage = 'I apologize, but I encountered an error. Please try asking your question again.';
+      res.write(`data: ${JSON.stringify({ chunk: errorMessage })}\n\n`);
+    }
+    res.write(`data: ${JSON.stringify({ done: true, error: true })}\n\n`);
+    res.end();
   }
 });
 

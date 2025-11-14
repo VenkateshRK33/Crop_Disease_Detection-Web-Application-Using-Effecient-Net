@@ -89,40 +89,57 @@ function Results({ data }) {
       ? `${API_URL}/api/chat/stream/${conversationId}?question=${encodeURIComponent(question)}`
       : `${API_URL}/api/chat/stream/${conversationId}`;
 
+    const messageId = Date.now();
+    let fullText = '';
+    let hasReceivedData = false;
+
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'text/event-stream',
+        },
+      });
       
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`Server error: ${response.status}`);
+      }
+
+      if (!response.body) {
+        throw new Error('No response body received');
       }
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
 
-      let fullText = '';
-      const messageId = Date.now();
-
-      // Add message placeholder
+      // Add message placeholder only after confirming connection
       setMessages(prev => [...prev, { id: messageId, role: 'assistant', content: '', isStreaming: true }]);
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
 
-        const chunk = decoder.decode(value);
+        const chunk = decoder.decode(value, { stream: true });
         const lines = chunk.split('\n');
 
         for (const line of lines) {
           if (line.startsWith('data: ')) {
             try {
               const jsonData = JSON.parse(line.slice(6));
+              
+              if (jsonData.error) {
+                throw new Error(jsonData.error);
+              }
+              
               if (jsonData.chunk) {
+                hasReceivedData = true;
                 fullText += jsonData.chunk;
                 // Update message content as it streams
                 setMessages(prev => prev.map(msg =>
                   msg.id === messageId ? { ...msg, content: fullText } : msg
                 ));
               }
+              
               if (jsonData.done) {
                 // Mark streaming as complete
                 setMessages(prev => prev.map(msg =>
@@ -130,18 +147,33 @@ function Results({ data }) {
                 ));
               }
             } catch (e) {
-              // Ignore parse errors for incomplete JSON chunks
+              // Only log parse errors, don't throw
+              if (line.length > 6) {
+                console.warn('Parse error:', e.message);
+              }
             }
           }
         }
       }
+
+      // If no data was received, show error
+      if (!hasReceivedData) {
+        throw new Error('No response received from server');
+      }
+
     } catch (error) {
+      console.error('Chat error:', error);
+      
+      // Remove the placeholder message if it exists
+      setMessages(prev => prev.filter(msg => msg.id !== messageId));
+      
       // Add error message to chat
       setMessages(prev => [...prev, {
         id: Date.now(),
         role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.',
-        isStreaming: false
+        content: `Sorry, I couldn't get a response. ${error.message}. Please make sure the chatbot server is running and try again.`,
+        isStreaming: false,
+        isError: true
       }]);
     } finally {
       setIsLoading(false);
@@ -290,12 +322,22 @@ function Results({ data }) {
                     View Full Market Analysis →
                   </a>
                   <a 
-                    href={`/harvest-calculator?crop=${cropType}`}
+                    href={`/harvest-calculator?crop=${cropType}&pest=${prediction.pest_infestation || 10}&maturity=${prediction.maturity || 50}`}
                     className="view-harvest-btn"
                   >
-                    Calculate Harvest for {formatDiseaseName(cropType)} →
+                    🌾 Smart Harvest Calculator (Auto-filled) →
                   </a>
                 </div>
+                
+                {prediction.pest_infestation && prediction.maturity && (
+                  <div className="auto-analysis-info">
+                    <div className="info-icon">🤖</div>
+                    <div className="info-content">
+                      <strong>AI Analysis Complete:</strong>
+                      <p>Based on the leaf image, we estimated <strong>{prediction.pest_infestation}% pest infestation</strong> and <strong>{prediction.maturity}% crop maturity</strong>. Click the harvest calculator above to see optimal harvest timing!</p>
+                    </div>
+                  </div>
+                )}
               </>
             )}
           </div>
@@ -317,7 +359,7 @@ function Results({ data }) {
         <div className="chatbot">
         <div className="messages">
           {messages.map(msg => (
-            <div key={msg.id} className={`message ${msg.role}`}>
+            <div key={msg.id} className={`message ${msg.role} ${msg.isError ? 'error' : ''}`}>
               <div className="message-content">
                 {msg.content}
                 {msg.isStreaming && <span className="cursor">|</span>}

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import './HarvestCalculatorForm.css';
 
-const HarvestCalculatorForm = ({ onCalculate, loading, initialCrop }) => {
+const HarvestCalculatorForm = ({ onCalculate, loading, initialCrop, initialPest, initialMaturity }) => {
   const [formData, setFormData] = useState({
     cropType: initialCrop ? initialCrop.charAt(0).toUpperCase() + initialCrop.slice(1) : '',
-    currentMaturity: 50,
-    pestInfestation: 10,
+    currentMaturity: initialMaturity ? parseInt(initialMaturity) : 50,
+    pestInfestation: initialPest ? parseInt(initialPest) : 10,
     currentMarketPrice: '',
     expectedYield: ''
   });

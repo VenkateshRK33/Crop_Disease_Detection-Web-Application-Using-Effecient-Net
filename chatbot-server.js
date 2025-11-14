@@ -473,10 +473,15 @@ app.get('/api/chat/stream/:conversationId', async (req, res) => {
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
+  res.setHeader('X-Accel-Buffering', 'no'); // Disable nginx buffering
+
+  let fullResponse = '';
+  let responseSent = false;
 
   try {
     // Check if Ollama is available
     const ollamaHealthy = await ollamaClient.checkHealth();
+    console.log(`Ollama health: ${ollamaHealthy ? 'healthy' : 'unhealthy'}`);
     
     let prompt;
     if (question) {
@@ -509,30 +514,46 @@ Provide a clear, helpful answer in simple language. Be specific and actionable. 
       // Initial advice
       prompt = buildPrompt(conversation.diseaseContext);
     }
-
-    let fullResponse = '';
     
     if (ollamaHealthy) {
       // Stream from Ollama
       try {
+        console.log('Streaming from Ollama...');
         for await (const chunk of ollamaClient.streamGenerate(prompt)) {
           fullResponse += chunk;
           res.write(`data: ${JSON.stringify({ chunk })}\n\n`);
+          responseSent = true;
         }
         res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
+        console.log('Ollama streaming complete');
       } catch (streamError) {
-        console.error('Streaming error:', streamError);
-        // Send fallback
+        console.error('Ollama streaming error:', streamError.message);
+        // Send fallback if Ollama fails
         const fallback = getFallbackAdvice(conversation.diseaseContext.diseaseName);
         fullResponse = fallback;
-        res.write(`data: ${JSON.stringify({ chunk: fallback })}\n\n`);
+        
+        // Only send if we haven't sent anything yet
+        if (!responseSent) {
+          res.write(`data: ${JSON.stringify({ chunk: fallback })}\n\n`);
+          responseSent = true;
+        }
         res.write(`data: ${JSON.stringify({ done: true, fallback: true })}\n\n`);
       }
     } else {
-      // Use fallback knowledge
+      // Use fallback knowledge when Ollama is not available
+      console.log('Using fallback knowledge (Ollama unavailable)');
       const fallback = getFallbackAdvice(conversation.diseaseContext.diseaseName);
       fullResponse = fallback;
-      res.write(`data: ${JSON.stringify({ chunk: fallback })}\n\n`);
+      
+      // Stream fallback word by word for better UX
+      const words = fallback.split(' ');
+      for (let i = 0; i < words.length; i++) {
+        const word = words[i] + (i < words.length - 1 ? ' ' : '');
+        res.write(`data: ${JSON.stringify({ chunk: word })}\n\n`);
+        responseSent = true;
+        await new Promise(resolve => setTimeout(resolve, 30));
+      }
+      
       res.write(`data: ${JSON.stringify({ done: true, fallback: true })}\n\n`);
     }
 
@@ -549,7 +570,13 @@ Provide a clear, helpful answer in simple language. Be specific and actionable. 
     res.end();
   } catch (error) {
     console.error('Chat error:', error);
-    res.write(`data: ${JSON.stringify({ error: 'Failed to generate response' })}\n\n`);
+    
+    // Always try to send something to the client
+    if (!responseSent) {
+      const errorMessage = 'I apologize, but I encountered an error. Please try asking your question again.';
+      res.write(`data: ${JSON.stringify({ chunk: errorMessage })}\n\n`);
+    }
+    res.write(`data: ${JSON.stringify({ done: true, error: true })}\n\n`);
     res.end();
   }
 });

@@ -292,6 +292,38 @@
   box-shadow: 0 6px 20px rgba(243, 156, 18, 0.3);
 }
 
+.auto-analysis-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  border: 2px solid #2196f3;
+  border-radius: 12px;
+  margin-top: 20px;
+  animation: slideInUp 0.5s ease-out;
+}
+
+.info-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.info-content {
+  flex: 1;
+}
+
+.info-content strong {
+  color: #1565c0;
+  font-size: 16px;
+}
+
+.info-content p {
+  margin: 8px 0 0 0;
+  color: #424242;
+  line-height: 1.6;
+}
+
 /* Floating Chatbot Button */
 .chatbot-toggle-btn {
   position: fixed;
@@ -424,6 +456,12 @@
 .message.assistant .message-content {
   background: var(--color-bg-secondary);
   color: var(--color-text-primary);
+}
+
+.message.assistant.error .message-content {
+  background: #fee;
+  color: #c33;
+  border-left: 3px solid #c33;
 }
 
 .cursor {

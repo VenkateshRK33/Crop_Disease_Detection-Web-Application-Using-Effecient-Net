@@ -57,6 +57,21 @@
   background: linear-gradient(to right, #e8f5e9, var(--color-bg-primary));
 }
 
+/* Error state - red with warning */
+.pipeline-step.error {
+  border-left: 4px solid #e74c3c;
+  background: linear-gradient(to right, #ffebee, var(--color-bg-primary));
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+}
+
+.pipeline-step.error .step-icon {
+  color: #e74c3c;
+}
+
+.pipeline-step.error .step-label {
+  color: #c0392b;
+}
+
 .step-icon {
   font-size: 2rem;
   margin-right: var(--spacing-sm);
