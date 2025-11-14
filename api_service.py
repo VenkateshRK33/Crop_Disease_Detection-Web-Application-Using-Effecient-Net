@@ -92,13 +92,24 @@ async def load_model_on_startup():
             class_names = json.load(f)
         num_classes = len(class_names)
         
-        # Create model with pretrained ImageNet weights
-        # Note: Using pretrained weights due to version compatibility
-        # Your custom trained weights have a version mismatch with current timm
-        model = timm.create_model('efficientnet_b3', pretrained=True, num_classes=num_classes)
+        # Create model architecture
+        model = timm.create_model('efficientnet_b3', pretrained=False, num_classes=num_classes)
+        
+        # Try to load custom trained weights
+        try:
+            # Load the state dict
+            state_dict = torch.load(CONFIG['model_path'], map_location=device)
+            model.load_state_dict(state_dict)
+            print(f"✓ Custom trained model loaded from {CONFIG['model_path']}")
+        except Exception as load_error:
+            print(f"⚠️ Warning: Could not load custom weights: {load_error}")
+            print(f"⚠️ Using pretrained ImageNet weights instead")
+            # Fallback to pretrained weights
+            model = timm.create_model('efficientnet_b3', pretrained=True, num_classes=num_classes)
+        
         model = model.to(device)
         model.eval()
-        print(f"✓ Model loaded from {CONFIG['model_path']}")
+        print(f"✓ Model ready on {device}")
         
         # Load label encoder
         label_encoder = joblib.load(CONFIG['label_encoder_path'])
